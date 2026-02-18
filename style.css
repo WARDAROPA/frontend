@@ -4,6 +4,19 @@
     box-sizing: border-box;
 }
 
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 30px;
+}
+
+.brand-logo {
+    width: 60px;
+    height: 60px;
+    object-fit: contain;
+}
+
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -11,6 +24,45 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
+    overflow: hidden;
+    position: relative;
+}
+
+#logo-rain {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+    overflow: hidden;
+}
+
+.falling-logo {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    opacity: 0.3;
+    animation: fall linear infinite;
+    filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.3));
+}
+
+@keyframes fall {
+    0% {
+        transform: translateY(-100px) rotate(0deg);
+        opacity: 0;
+    }
+    10% {
+        opacity: 0.9;
+    }
+    90% {
+        opacity: 0.9;
+    }
+    100% {
+        transform: translateY(100vh) rotate(360deg);
+        opacity: 0.9;
+    }
 }
 
 .container {
@@ -21,6 +73,8 @@ body {
     text-align: center;
     max-width: 400px;
     width: 100%;
+    position: relative;
+    z-index: 10;
 }
 
 h1 {
