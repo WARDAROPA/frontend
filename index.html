@@ -8,33 +8,10 @@
 </head>
 <body>
     <div class="container">
-        <h1>👗 Wardaropa</h1>
-        <p>Tu red social de moda</p>
-        <div id="status" class="disconnected">Desconectado</div>
+        <div id="auth-container">
+        </div>
     </div>
 
-    <script>
-        const ws = new WebSocket('ws://localhost:3000');
-        const statusDiv = document.getElementById('status');
-
-        ws.onopen = () => {
-            statusDiv.textContent = 'Conectado al servidor ✓';
-            statusDiv.className = 'connected';
-        };
-
-        ws.onmessage = (event) => {
-            console.log('Mensaje del servidor:', event.data);
-        };
-
-        ws.onerror = () => {
-            statusDiv.textContent = 'Error de conexión ✗';
-            statusDiv.className = 'disconnected';
-        };
-
-        ws.onclose = () => {
-            statusDiv.textContent = 'Desconectado ✗';
-            statusDiv.className = 'disconnected';
-        };
-    </script>
+    <script src="app.js"></script>
 </body>
 </html>
