@@ -14,7 +14,7 @@
     </div>
 
     <script>
-        const ws = new WebSocket('wss://' + window.location.host + '/ws');
+        const ws = new WebSocket('ws://localhost:3000');
         const statusDiv = document.getElementById('status');
 
         ws.onopen = () => {
