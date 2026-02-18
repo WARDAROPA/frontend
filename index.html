@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wardaropa - Red Social de Ropa</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>👗 Wardaropa</h1>
+        <p>Tu red social de moda</p>
+        <div id="status" class="disconnected">Desconectado</div>
+    </div>
+
+    <script>
+        const ws = new WebSocket('ws://4.233.184.106:3000');
+        const statusDiv = document.getElementById('status');
+
+        ws.onopen = () => {
+            statusDiv.textContent = 'Conectado al servidor ✓';
+            statusDiv.className = 'connected';
+        };
+
+        ws.onmessage = (event) => {
+            console.log('Mensaje del servidor:', event.data);
+        };
+
+        ws.onerror = () => {
+            statusDiv.textContent = 'Error de conexión ✗';
+            statusDiv.className = 'disconnected';
+        };
+
+        ws.onclose = () => {
+            statusDiv.textContent = 'Desconectado ✗';
+            statusDiv.className = 'disconnected';
+        };
+    </script>
+</body>
+</html>
