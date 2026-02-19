@@ -10,13 +10,6 @@ import { LogoRainComponent } from './components/logo-rain/logo-rain.component';
   template: `
     <app-logo-rain></app-logo-rain>
     <div class="main-content">
-      <div class="brand" *ngIf="showBrand">
-        <img src="assets/logo.png" alt="Logo Wardaropa" class="brand-logo">
-        <div>
-          <h1>Wardaropa</h1>
-          <p>Tu red social de moda</p>
-        </div>
-      </div>
       <router-outlet></router-outlet>
     </div>
   `,

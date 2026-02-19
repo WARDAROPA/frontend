@@ -50,6 +50,41 @@
     </div>
   </div>
 
+  <div class="comments-modal" *ngIf="showCommentsModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Comentarios</h3>
+        <button class="close-btn" (click)="closeComments()">✕</button>
+      </div>
+      
+      <div class="modal-body">
+        <div class="comments-list">
+          <div class="comment" *ngFor="let comment of comments">
+            <div class="comment-header">
+              <div class="user-avatar small">{{ comment.username[0].toUpperCase() }}</div>
+              <strong>{{ comment.username }}</strong>
+            </div>
+            <p class="comment-text">{{ comment.texto }}</p>
+          </div>
+          
+          <div class="no-comments" *ngIf="comments.length === 0">
+            <p>No hay comentarios todavía</p>
+            <p class="subtitle">¡Sé el primero en comentar!</p>
+          </div>
+        </div>
+        
+        <div class="add-comment">
+          <textarea 
+            [(ngModel)]="newComment"
+            placeholder="Escribe un comentario..."
+            rows="2"
+          ></textarea>
+          <button class="btn-publish" (click)="addComment()">Comentar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div class="feed">
     <h2>Feed de Moda</h2>
     
@@ -67,8 +102,14 @@
         </div>
         
         <div class="post-actions">
-          <button class="action-btn like" (click)="likePost(post.id)">❤️ {{ post.likes_count }}</button>
-          <button class="action-btn comment">💬 {{ post.comments_count }}</button>
+          <button 
+            class="action-btn like" 
+            [class.liked]="post.user_liked"
+            (click)="toggleLike(post)"
+          >
+            {{ post.user_liked ? '❤️' : '🤍' }} {{ post.likes_count }}
+          </button>
+          <button class="action-btn comment" (click)="openComments(post)">💬 {{ post.comments_count }}</button>
           <button class="action-btn share">📤</button>
         </div>
         

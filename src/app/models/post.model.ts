@@ -7,6 +7,7 @@ export interface Post {
   username: string;
   likes_count: number;
   comments_count: number;
+  user_liked: number;
 }
 
 export interface Comment {

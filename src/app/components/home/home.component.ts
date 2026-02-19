@@ -25,6 +25,11 @@ export class HomeComponent implements OnInit, OnDestroy {
   newPostDescription = '';
   newPostPhoto = '';
   selectedFileName = '';
+  
+  showCommentsModal = false;
+  selectedPost: Post | null = null;
+  comments: any[] = [];
+  newComment = '';
 
   constructor(
     private authService: AuthService,
@@ -59,7 +64,8 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   loadPosts(): void {
-    this.postService.getPosts().subscribe({
+    const userId = this.currentUser?.id;
+    this.postService.getPosts(userId).subscribe({
       next: (response) => {
         if (response.success) {
           this.posts = response.posts;
@@ -71,34 +77,34 @@ export class HomeComponent implements OnInit, OnDestroy {
     });
   }
 
-  likePost(postId: number): void {
+  toggleLike(post: Post): void {
     if (!this.currentUser) return;
     
-    this.postService.likePost(postId, { usuario_id: this.currentUser.id }).subscribe({
-      next: (response) => {
-        if (response.success) {
-          this.loadPosts();
-        }
-      },
-      error: (error) => {
-        console.error('Error al dar like:', error);
-      }
-    });
-  }
-
-  unlikePost(postId: number): void {
-    if (!this.currentUser) return;
+    const likeRequest = { usuario_id: this.currentUser.id };
     
-    this.postService.unlikePost(postId, { usuario_id: this.currentUser.id }).subscribe({
-      next: (response) => {
-        if (response.success) {
-          this.loadPosts();
+    if (post.user_liked) {
+      this.postService.unlikePost(post.id, likeRequest).subscribe({
+        next: (response) => {
+          if (response.success) {
+            this.loadPosts();
+          }
+        },
+        error: (error) => {
+          console.error('Error al quitar like:', error);
         }
-      },
-      error: (error) => {
-        console.error('Error al quitar like:', error);
-      }
-    });
+      });
+    } else {
+      this.postService.likePost(post.id, likeRequest).subscribe({
+        next: (response) => {
+          if (response.success) {
+            this.loadPosts();
+          }
+        },
+        error: (error) => {
+          console.error('Error al dar like:', error);
+        }
+      });
+    }
   }
 
   toggleCreatePost(): void {
@@ -142,6 +148,54 @@ export class HomeComponent implements OnInit, OnDestroy {
       error: (error) => {
         console.error('Error al crear post:', error);
         alert('Error al crear el post');
+      }
+    });
+  }
+
+  openComments(post: Post): void {
+    this.selectedPost = post;
+    this.showCommentsModal = true;
+    this.loadComments(post.id);
+  }
+
+  closeComments(): void {
+    this.showCommentsModal = false;
+    this.selectedPost = null;
+    this.comments = [];
+    this.newComment = '';
+  }
+
+  loadComments(postId: number): void {
+    this.postService.getComments(postId).subscribe({
+      next: (response) => {
+        if (response.success) {
+          this.comments = response.comments;
+        }
+      },
+      error: (error) => {
+        console.error('Error al cargar comentarios:', error);
+      }
+    });
+  }
+
+  addComment(): void {
+    if (!this.currentUser || !this.selectedPost || !this.newComment.trim()) {
+      return;
+    }
+
+    this.postService.createComment(this.selectedPost.id, {
+      usuario_id: this.currentUser.id,
+      texto: this.newComment
+    }).subscribe({
+      next: (response) => {
+        if (response.success) {
+          this.newComment = '';
+          this.loadComments(this.selectedPost!.id);
+          this.loadPosts();
+        }
+      },
+      error: (error) => {
+        console.error('Error al añadir comentario:', error);
       }
     });
   }

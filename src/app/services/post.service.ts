@@ -11,8 +11,9 @@ export class PostService {
 
   constructor(private http: HttpClient) {}
 
-  getPosts(): Observable<{ success: boolean; posts: Post[] }> {
-    return this.http.get<{ success: boolean; posts: Post[] }>(`${this.apiUrl}/posts`);
+  getPosts(usuarioId?: number): Observable<{ success: boolean; posts: Post[] }> {
+    const params: any = usuarioId ? { usuario_id: usuarioId.toString() } : undefined;
+    return this.http.get<{ success: boolean; posts: Post[] }>(`${this.apiUrl}/posts`, params ? { params } : {});
   }
 
   createPost(post: CreatePostRequest): Observable<{ success: boolean; message: string; postId: number }> {
