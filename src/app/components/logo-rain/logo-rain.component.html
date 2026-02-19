@@ -1,0 +1,9 @@
+<div class="logo-rain">
+  <img
+    *ngFor="let logo of logos"
+    src="assets/logo.png"
+    class="falling-logo"
+    [ngStyle]="getLogoStyle(logo)"
+    alt="Logo cayendo"
+  />
+</div>

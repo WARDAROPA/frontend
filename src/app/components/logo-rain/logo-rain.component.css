@@ -1,0 +1,34 @@
+.logo-rain {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+  overflow: hidden;
+}
+
+.falling-logo {
+  position: absolute;
+  opacity: 0.9;
+  animation: fall linear infinite;
+  filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.3));
+}
+
+@keyframes fall {
+  0% {
+    transform: translateY(-100px) rotate(0deg);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.9;
+  }
+  90% {
+    opacity: 0.9;
+  }
+  100% {
+    transform: translateY(100vh) rotate(360deg);
+    opacity: 0.9;
+  }
+}

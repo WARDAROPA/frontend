@@ -1,0 +1,32 @@
+<div class="auth-form">
+  <h2>Crear Cuenta</h2>
+  <form (ngSubmit)="onSubmit()" #registerForm="ngForm">
+    <input
+      type="text"
+      [(ngModel)]="username"
+      name="username"
+      placeholder="Usuario"
+      required
+    />
+    <input
+      type="email"
+      [(ngModel)]="email"
+      name="email"
+      placeholder="Email"
+      required
+    />
+    <input
+      type="password"
+      [(ngModel)]="password"
+      name="password"
+      placeholder="Contraseña"
+      required
+    />
+    <button type="submit" [disabled]="!registerForm.valid">Registrarse</button>
+    <p class="switch-link">
+      ¿Ya tienes cuenta? <a (click)="goToLogin()">Inicia sesión</a>
+    </p>
+  </form>
+  <div *ngIf="successMessage" class="message success">{{ successMessage }}</div>
+  <div *ngIf="errorMessage" class="message error">{{ errorMessage }}</div>
+</div>

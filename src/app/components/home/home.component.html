@@ -1,0 +1,41 @@
+<app-navbar></app-navbar>
+
+<div class="home-container">
+  <div class="connection-status" [class.connected]="isConnected" [class.disconnected]="!isConnected">
+    {{ isConnected ? 'Conectado al servidor ✓' : 'Desconectado ✗' }}
+  </div>
+
+  <div class="feed">
+    <h2>Feed de Moda</h2>
+    
+    <div class="posts-grid">
+      <div class="post-card" *ngFor="let post of posts">
+        <div class="post-header">
+          <div class="post-user">
+            <div class="user-avatar">{{ post.user[0].toUpperCase() }}</div>
+            <span class="username">{{ post.user }}</span>
+          </div>
+        </div>
+        
+        <div class="post-image">
+          <img [src]="post.image" [alt]="post.description" />
+        </div>
+        
+        <div class="post-actions">
+          <button class="action-btn like">❤️ {{ post.likes }}</button>
+          <button class="action-btn comment">💬 {{ post.comments }}</button>
+          <button class="action-btn share">📤</button>
+        </div>
+        
+        <div class="post-description">
+          <strong>{{ post.user }}</strong> {{ post.description }}
+        </div>
+      </div>
+    </div>
+
+    <div class="empty-state" *ngIf="posts.length === 0">
+      <p>No hay publicaciones todavía</p>
+      <p class="subtitle">¡Sé el primero en compartir tu outfit!</p>
+    </div>
+  </div>
+</div>

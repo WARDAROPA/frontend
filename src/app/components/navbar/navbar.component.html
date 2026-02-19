@@ -1,0 +1,13 @@
+<nav class="navbar">
+  <div class="nav-content">
+    <div class="nav-brand">
+      <img src="assets/logo.png" alt="Logo" class="nav-logo" />
+      <span class="nav-title">Wardaropa</span>
+    </div>
+    
+    <div class="nav-actions">
+      <span class="nav-user">👤 {{ currentUser?.username }}</span>
+      <button class="btn-logout" (click)="logout()">Cerrar Sesión</button>
+    </div>
+  </div>
+</nav>
