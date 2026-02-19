@@ -12,23 +12,23 @@
       <div class="post-card" *ngFor="let post of posts">
         <div class="post-header">
           <div class="post-user">
-            <div class="user-avatar">{{ post.user[0].toUpperCase() }}</div>
-            <span class="username">{{ post.user }}</span>
+            <div class="user-avatar">{{ post.username[0].toUpperCase() }}</div>
+            <span class="username">{{ post.username }}</span>
           </div>
         </div>
         
         <div class="post-image">
-          <img [src]="post.image" [alt]="post.description" />
+          <img [src]="post.foto" [alt]="post.descripcion" />
         </div>
         
         <div class="post-actions">
-          <button class="action-btn like">❤️ {{ post.likes }}</button>
-          <button class="action-btn comment">💬 {{ post.comments }}</button>
+          <button class="action-btn like" (click)="likePost(post.id)">❤️ {{ post.likes_count }}</button>
+          <button class="action-btn comment">💬 {{ post.comments_count }}</button>
           <button class="action-btn share">📤</button>
         </div>
         
         <div class="post-description">
-          <strong>{{ post.user }}</strong> {{ post.description }}
+          <strong>{{ post.username }}</strong> {{ post.descripcion }}
         </div>
       </div>
     </div>

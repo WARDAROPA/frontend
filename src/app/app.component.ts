@@ -1,11 +1,12 @@
 import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 import { LogoRainComponent } from './components/logo-rain/logo-rain.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, LogoRainComponent],
+  imports: [CommonModule, RouterOutlet, LogoRainComponent],
   template: `
     <app-logo-rain></app-logo-rain>
     <div class="main-content">

@@ -3,7 +3,9 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { WebSocketService } from '../../services/websocket.service';
+import { PostService } from '../../services/post.service';
 import { User } from '../../models/user.model';
+import { Post } from '../../models/post.model';
 import { NavbarComponent } from '../navbar/navbar.component';
 
 @Component({
@@ -16,11 +18,12 @@ import { NavbarComponent } from '../navbar/navbar.component';
 export class HomeComponent implements OnInit, OnDestroy {
   currentUser: User | null = null;
   isConnected = false;
-  posts: any[] = [];
+  posts: Post[] = [];
 
   constructor(
     private authService: AuthService,
     private wsService: WebSocketService,
+    private postService: PostService,
     private router: Router
   ) {}
 
@@ -42,40 +45,54 @@ export class HomeComponent implements OnInit, OnDestroy {
       console.log('Mensaje recibido:', message);
     });
 
-    this.loadMockPosts();
+    this.loadPosts();
   }
 
   ngOnDestroy(): void {
     this.wsService.disconnect();
   }
-  //ejemplo hardcodeado de posts
-  loadMockPosts(): void {
-    this.posts = [
-      {
-        id: 1,
-        user: 'alfonsoEstiloso',
-        image: 'https://i.blogs.es/458f0c/9078355586_6f550781b5_o/1366_521.jpg',
-        description: 'tremendas crocs que me he comprado colega',
-        likes: 42,
-        comments: 5
+
+  loadPosts(): void {
+    this.postService.getPosts().subscribe({
+      next: (response) => {
+        if (response.success) {
+          this.posts = response.posts;
+        }
       },
-      {
-        id: 2,
-        user: 'maricarmen',
-        image: 'https://www.mundodeportivo.com/files/image_449_220/uploads/2022/03/09/62289ee6e964d.png',
-        description: 'Mi abrigo de balenciaga, estoy a la ultima',
-        likes: 128,
-        comments: 12
-      },
-      {
-        id: 3,
-        user: 'AmandaModa',
-        image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTxWz0R5CBimvDLyyv4Yg9i39BnJp3UVPYIvQ&s',
-        description: 'Alguien sabe si es original',
-        likes: 89,
-        comments: 8
+      error: (error) => {
+        console.error('Error al cargar posts:', error);
       }
-    ];
+    });
+  }
+
+  likePost(postId: number): void {
+    if (!this.currentUser) return;
+    
+    this.postService.likePost(postId, { usuario_id: this.currentUser.id }).subscribe({
+      next: (response) => {
+        if (response.success) {
+          this.loadPosts();
+        }
+      },
+      error: (error) => {
+        console.error('Error al dar like:', error);
+      }
+    });
+  }
+
+  unlikePost(postId: number): void {
+    if (!this.currentUser) return;
+    
+    this.postService.unlikePost(postId, { usuario_id: this.currentUser.id }).subscribe({
+      next: (response) => {
+        if (response.success) {
+          this.loadPosts();
+        }
+      },
+      error: (error) => {
+        console.error('Error al quitar like:', error);
+      }
+    });
   }
 
   logout(): void {
