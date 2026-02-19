@@ -1,5 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { WebSocketService } from '../../services/websocket.service';
@@ -11,7 +12,7 @@ import { NavbarComponent } from '../navbar/navbar.component';
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, NavbarComponent],
+  imports: [CommonModule, FormsModule, NavbarComponent],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })
@@ -19,6 +20,11 @@ export class HomeComponent implements OnInit, OnDestroy {
   currentUser: User | null = null;
   isConnected = false;
   posts: Post[] = [];
+  
+  showCreatePost = false;
+  newPostDescription = '';
+  newPostPhoto = '';
+  selectedFileName = '';
 
   constructor(
     private authService: AuthService,
@@ -91,6 +97,51 @@ export class HomeComponent implements OnInit, OnDestroy {
       },
       error: (error) => {
         console.error('Error al quitar like:', error);
+      }
+    });
+  }
+
+  toggleCreatePost(): void {
+    this.showCreatePost = !this.showCreatePost;
+    if (!this.showCreatePost) {
+      this.newPostDescription = '';
+      this.newPostPhoto = '';
+      this.selectedFileName = '';
+    }
+  }
+
+  onFileSelected(event: any): void {
+    const file = event.target.files[0];
+    if (file) {
+      this.selectedFileName = file.name;
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.newPostPhoto = reader.result as string;
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+
+  createPost(): void {
+    if (!this.currentUser || !this.newPostPhoto) {
+      alert('Debes seleccionar una imagen');
+      return;
+    }
+
+    this.postService.createPost({
+      usuario_id: this.currentUser.id,
+      descripcion: this.newPostDescription,
+      foto: this.newPostPhoto
+    }).subscribe({
+      next: (response) => {
+        if (response.success) {
+          this.toggleCreatePost();
+          this.loadPosts();
+        }
+      },
+      error: (error) => {
+        console.error('Error al crear post:', error);
+        alert('Error al crear el post');
       }
     });
   }

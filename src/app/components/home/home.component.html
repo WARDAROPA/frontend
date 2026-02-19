@@ -5,6 +5,51 @@
     {{ isConnected ? 'Conectado al servidor ✓' : 'Desconectado ✗' }}
   </div>
 
+  <button class="fab-button" (click)="toggleCreatePost()" *ngIf="!showCreatePost">
+    ➕ Nueva Publicación
+  </button>
+
+  <div class="create-post-modal" *ngIf="showCreatePost">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Crear nueva publicación</h3>
+        <button class="close-btn" (click)="toggleCreatePost()">✕</button>
+      </div>
+      
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="photo">Foto *</label>
+          <input 
+            type="file" 
+            id="photo" 
+            accept="image/*" 
+            (change)="onFileSelected($event)"
+            class="file-input"
+          />
+          <div class="file-name" *ngIf="selectedFileName">{{ selectedFileName }}</div>
+          <div class="preview" *ngIf="newPostPhoto">
+            <img [src]="newPostPhoto" alt="Preview" />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="description">Descripción</label>
+          <textarea 
+            id="description" 
+            [(ngModel)]="newPostDescription"
+            placeholder="Describe tu outfit..."
+            rows="3"
+          ></textarea>
+        </div>
+
+        <div class="modal-actions">
+          <button class="btn-cancel" (click)="toggleCreatePost()">Cancelar</button>
+          <button class="btn-publish" (click)="createPost()">Publicar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div class="feed">
     <h2>Feed de Moda</h2>
     
