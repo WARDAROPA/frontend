@@ -1,0 +1,52 @@
+<app-navbar></app-navbar>
+
+<div class="profile-container">
+  
+  <header class="profile-header">
+    <div class="profile-avatar">
+      <span *ngIf="!user.avatar">{{ user.username.charAt(0) | uppercase }}</span>
+      <img *ngIf="user.avatar" [src]="user.avatar" alt="Avatar" />
+    </div>
+    
+    <div class="profile-info">
+      <h2 class="username">{{ user.username }}</h2>
+      <p class="profile-email">{{ user.email }}</p>
+      
+      <div class="profile-stats">
+        <span><strong>{{ posts.length }}</strong> prendas subidas</span>
+      </div>
+
+      <p class="profile-bio" *ngIf="user.bio">{{ user.bio }}</p>
+      <p class="profile-empty-bio" *ngIf="!user.bio">Sin biografía aún.</p>
+    </div>
+  </header>
+
+  <hr class="divider">
+
+  <div class="posts-section">
+    <div *ngIf="loadingPosts" class="loading-state">
+      Cargando armario...
+    </div>
+
+    <div *ngIf="!loadingPosts && posts.length === 0" class="empty-state">
+      <span class="empty-icon">👕</span>
+      <h3>El armario está vacío</h3>
+      <p>Sube tu primera prenda para empezar a mostrar tu estilo.</p>
+    </div>
+
+    <div class="posts-grid" *ngIf="!loadingPosts && posts.length > 0">
+      <div class="post-item" *ngFor="let post of posts">
+        <img [src]="post.foto" [alt]="post.descripcion || 'Prenda'">
+        
+        <div class="post-overlay">
+          <span class="stat">❤️ {{ post.likes_count || 0 }}</span>
+          <span class="stat">💬 {{ post.comments_count || 0 }}</span>
+        </div>
+        <button class="delete-btn" (click)="deletePost(post.id)" title="Borrar prenda">
+            🗑️
+          </button>
+      </div>
+    </div>
+  </div>
+
+</div>

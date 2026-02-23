@@ -6,7 +6,7 @@
     </div>
     
     <div class="nav-actions">
-      <span class="nav-user">👤 {{ currentUser?.username }}</span>
+      <a class="nav-user" [routerLink]="['/profile']">👤 {{ currentUser?.username }}</a>
       <button class="btn-logout" (click)="logout()">Cerrar Sesión</button>
     </div>
   </div>

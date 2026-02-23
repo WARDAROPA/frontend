@@ -1,0 +1,184 @@
+:host {
+  display: block;
+  min-height: 100vh;
+  background-color: #fafafa;
+}
+
+.profile-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 3rem 1rem;
+  background-color: #fafafa;
+}
+
+.profile-header {
+  display: flex;
+  align-items: center;
+  gap: 3rem;
+  padding-bottom: 2rem;
+}
+
+.profile-avatar {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #8b5cf6, #3b82f6); 
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 4rem;
+  font-weight: bold;
+  flex-shrink: 0;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.profile-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.profile-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.username {
+  font-size: 2.2rem;
+  margin: 0;
+  color: #262626;
+  font-weight: 300;
+}
+
+.profile-email {
+  color: #8e8e8e;
+  font-size: 1rem;
+  margin: 0;
+}
+
+.profile-stats {
+  display: flex;
+  gap: 1.5rem;
+  margin: 0.5rem 0;
+  font-size: 1.1rem;
+  color: #262626;
+}
+
+.profile-bio {
+  margin-top: 0.5rem;
+  color: #262626;
+  line-height: 1.5;
+}
+
+.profile-empty-bio {
+  margin-top: 0.5rem;
+  font-style: italic;
+  color: #a8a8a8;
+}
+
+.divider {
+  border: none;
+  border-top: 1px solid #dbdbdb;
+  margin: 0 0 2rem 0;
+}
+
+.posts-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); 
+  gap: 1.5rem;
+}
+
+.post-item {
+  position: relative;
+  aspect-ratio: 1 / 1; 
+  background-color: #efefef;
+  cursor: pointer;
+  overflow: hidden;
+  border-radius: 8px; 
+}
+
+.post-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.post-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.post-item:hover .post-overlay {
+  opacity: 1;
+}
+
+.post-item:hover img {
+  transform: scale(1.05); 
+}
+
+.stat {
+  color: white;
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+
+.loading-state, .empty-state {
+  text-align: center;
+  padding: 4rem 1rem;
+  color: #8e8e8e;
+}
+
+.empty-icon {
+  font-size: 4rem;
+  display: block;
+  margin-bottom: 1rem;
+}
+
+.empty-state h3 {
+  color: #262626;
+  margin-bottom: 0.5rem;
+  font-size: 1.5rem;
+}
+
+.stats-container {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.delete-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: rgba(220, 38, 38, 0.85); 
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+}
+
+.delete-btn:hover {
+  background-color: rgb(220, 38, 38); 
+  transform: scale(1.1);
+}
