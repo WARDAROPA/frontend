@@ -7,7 +7,7 @@ import { Post, Comment, CreatePostRequest, CreateCommentRequest, LikeRequest } f
   providedIn: 'root'
 })
 export class PostService {
-  private apiUrl = '/api';
+  private apiUrl = 'http://localhost:3000';
 
   constructor(private http: HttpClient) {}
 

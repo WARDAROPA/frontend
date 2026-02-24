@@ -17,8 +17,7 @@ export class WebSocketService {
       return;
     }
 
-    const protocol = window.location.protocol === 'https:' ? 'wss' : 'ws';
-    this.ws = new WebSocket(`${protocol}://${window.location.host}/api`);
+    this.ws = new WebSocket('ws://localhost:3000/api');
 
     this.ws.onopen = () => {
       console.log('WebSocket conectado');
