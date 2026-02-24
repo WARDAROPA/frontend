@@ -17,7 +17,7 @@ export class WebSocketService {
       return;
     }
 
-    this.ws = new WebSocket('ws://localhost:3000');
+    this.ws = new WebSocket('ws://4.233.184.106:3000');
 
     this.ws.onopen = () => {
       console.log('WebSocket conectado');
