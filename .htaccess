@@ -6,3 +6,7 @@ RewriteRule ^ - [L]
 
 # If the requested resource doesn't exist, use index.html
 RewriteRule ^ /index.html
+
+# Proxy API requests to the backend
+ProxyPassMatch ^/api/(.*)$ http://4.233.184.106:3000/$1 [P]
+ProxyPassReverse ^/api/(.*)$ http://4.233.184.106:3000/$1
