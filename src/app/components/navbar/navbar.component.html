@@ -1,12 +1,12 @@
 <nav class="navbar">
   <div class="nav-content">
-    <div class="nav-brand">
+    <div class="nav-brand" [routerLink]="['/home']">
       <img src="assets/logo.png" alt="Logo" class="nav-logo" />
       <span class="nav-title">Wardaropa</span>
     </div>
     
     <div class="nav-actions">
-      <a class="nav-user" [routerLink]="['/profile']">👤 {{ currentUser?.username }}</a>
+      <a class="nav-user" [routerLink]="['/profile']">{{ currentUser?.username }}</a>
       <button class="btn-logout" (click)="logout()">Cerrar Sesión</button>
     </div>
   </div>

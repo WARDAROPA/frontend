@@ -1,25 +1,50 @@
-<div class="auth-form">
-  <h2>Iniciar Sesión</h2>
-  <form (ngSubmit)="onSubmit()" #loginForm="ngForm">
-    <input
-      type="text"
-      [(ngModel)]="username"
-      name="username"
-      placeholder="Usuario"
-      required
-    />
-    <input
-      type="password"
-      [(ngModel)]="password"
-      name="password"
-      placeholder="Contraseña"
-      required
-    />
-    <button type="submit" [disabled]="!loginForm.valid">Entrar</button>
-    <p class="switch-link">
-      ¿No tienes cuenta? <a (click)="goToRegister()">Regístrate</a>
-    </p>
-  </form>
-  <div *ngIf="successMessage" class="message success">{{ successMessage }}</div>
-  <div *ngIf="errorMessage" class="message error">{{ errorMessage }}</div>
+<div class="auth-container">
+  <div class="auth-card">
+    <div class="auth-header">
+      <div class="logo-container">
+        <img src="assets/logo.png" alt="Wardaropa Logo" class="auth-logo" />
+      </div>
+      <h2>Bienvenido de vuelta</h2>
+      <p class="subtitle">Inicia sesión para acceder a tu armario</p>
+    </div>
+
+    <form (ngSubmit)="onSubmit()" #loginForm="ngForm">
+      <div class="form-group">
+        <label for="username">Usuario</label>
+        <input
+          id="username"
+          type="text"
+          [(ngModel)]="username"
+          name="username"
+          placeholder="Introduce tu usuario"
+          required
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="password">Contraseña</label>
+        <input
+          id="password"
+          type="password"
+          [(ngModel)]="password"
+          name="password"
+          placeholder="Introduce tu contraseña"
+          required
+        />
+      </div>
+
+      <button type="submit" [disabled]="!loginForm.valid">
+        Iniciar Sesión
+      </button>
+    </form>
+
+    <div *ngIf="successMessage" class="message success">{{ successMessage }}</div>
+    <div *ngIf="errorMessage" class="message error">{{ errorMessage }}</div>
+
+    <div class="auth-footer">
+      <p class="switch-link">
+        ¿No tienes cuenta? <a (click)="goToRegister()">Crear cuenta</a>
+      </p>
+    </div>
+  </div>
 </div>

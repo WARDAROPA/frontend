@@ -8,7 +8,7 @@ import { LogoRainComponent } from './components/logo-rain/logo-rain.component';
   standalone: true,
   imports: [CommonModule, RouterOutlet, LogoRainComponent],
   template: `
-    <app-logo-rain></app-logo-rain>
+    <app-logo-rain *ngIf="showRain"></app-logo-rain>
     <div class="main-content">
       <router-outlet></router-outlet>
     </div>
@@ -16,7 +16,8 @@ import { LogoRainComponent } from './components/logo-rain/logo-rain.component';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  get showBrand(): boolean {
-    return window.location.pathname === '/login' || window.location.pathname === '/register' || window.location.pathname === '/';
+  get showRain(): boolean {
+    const path = window.location.pathname;
+    return path !== '/login' && path !== '/register' && path !== '/';
   }
 }

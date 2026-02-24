@@ -1,37 +1,42 @@
 :host {
   display: block;
   min-height: 100vh;
-  background-color: #fafafa;
+  background: var(--bg-secondary);
 }
 
 .profile-container {
-  max-width: 900px;
+  max-width: 1200px;
   margin: 0 auto;
-  padding: 3rem 1rem;
-  background-color: #fafafa;
+  padding: 100px 24px 40px;
+  background: var(--bg-secondary);
 }
 
 .profile-header {
   display: flex;
   align-items: center;
   gap: 3rem;
-  padding-bottom: 2rem;
+  padding: 32px;
+  background: var(--bg-primary);
+  border-radius: var(--radius-2xl);
+  box-shadow: var(--shadow-md);
+  margin-bottom: 32px;
+  border: 1px solid var(--border-color);
 }
 
 .profile-avatar {
-  width: 150px;
-  height: 150px;
+  width: 120px;
+  height: 120px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #8b5cf6, #3b82f6); 
+  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
   color: white;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 4rem;
-  font-weight: bold;
+  font-size: 3rem;
+  font-weight: 700;
   flex-shrink: 0;
   overflow: hidden;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  box-shadow: var(--shadow-lg);
 }
 
 .profile-avatar img {
@@ -47,64 +52,77 @@
 }
 
 .username {
-  font-size: 2.2rem;
+  font-size: 28px;
   margin: 0;
-  color: #262626;
-  font-weight: 300;
+  color: var(--text-primary);
+  font-weight: 700;
+  letter-spacing: -0.5px;
 }
 
 .profile-email {
-  color: #8e8e8e;
-  font-size: 1rem;
-  margin: 0;
+  color: var(--text-secondary);
+  font-size: 15px;
+  margin: 4px 0;
 }
 
 .profile-stats {
   display: flex;
   gap: 1.5rem;
-  margin: 0.5rem 0;
-  font-size: 1.1rem;
-  color: #262626;
+  margin: 12px 0;
+  font-size: 15px;
+  color: var(--text-primary);
 }
 
 .profile-bio {
-  margin-top: 0.5rem;
-  color: #262626;
-  line-height: 1.5;
+  margin-top: 8px;
+  color: var(--text-primary);
+  line-height: 1.6;
 }
 
 .profile-empty-bio {
-  margin-top: 0.5rem;
+  margin-top: 8px;
   font-style: italic;
-  color: #a8a8a8;
+  color: var(--text-tertiary);
 }
 
 .divider {
-  border: none;
-  border-top: 1px solid #dbdbdb;
-  margin: 0 0 2rem 0;
+  display: none;
+}
+
+.posts-section {
+  background: var(--bg-primary);
+  padding: 32px;
+  border-radius: var(--radius-2xl);
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--border-color);
 }
 
 .posts-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr); 
-  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 24px;
 }
 
 .post-item {
   position: relative;
-  aspect-ratio: 1 / 1; 
-  background-color: #efefef;
+  aspect-ratio: 1 / 1;
+  background: var(--bg-tertiary);
   cursor: pointer;
   overflow: hidden;
-  border-radius: 8px; 
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--border-color);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.post-item:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
 }
 
 .post-item img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.3s ease;
 }
 
 .post-overlay {
@@ -113,21 +131,18 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.6);
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 1.5rem;
   opacity: 0;
   transition: opacity 0.2s ease;
+  backdrop-filter: blur(4px);
 }
 
 .post-item:hover .post-overlay {
   opacity: 1;
-}
-
-.post-item:hover img {
-  transform: scale(1.05); 
 }
 
 .stat {
@@ -138,20 +153,26 @@
 
 .loading-state, .empty-state {
   text-align: center;
-  padding: 4rem 1rem;
-  color: #8e8e8e;
+  padding: 60px 20px;
+  color: var(--text-secondary);
 }
 
 .empty-icon {
-  font-size: 4rem;
+  font-size: 64px;
   display: block;
-  margin-bottom: 1rem;
+  margin-bottom: 16px;
 }
 
 .empty-state h3 {
-  color: #262626;
-  margin-bottom: 0.5rem;
-  font-size: 1.5rem;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.empty-state p {
+  color: var(--text-secondary);
+  font-size: 14px;
 }
 
 .stats-container {
@@ -161,24 +182,30 @@
 
 .delete-btn {
   position: absolute;
-  top: 10px;
-  right: 10px;
-  background-color: rgba(220, 38, 38, 0.85); 
+  top: 12px;
+  right: 12px;
+  background: var(--danger-color);
   color: white;
   border: none;
   border-radius: 50%;
-  width: 40px;
-  height: 40px;
+  width: 36px;
+  height: 36px;
   cursor: pointer;
-  font-size: 1.2rem;
+  font-size: 18px;
   display: flex;
   align-items: center;
   justify-content: center;
   transition: all 0.2s ease;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+  box-shadow: var(--shadow-md);
+  opacity: 0;
+  z-index: 10;
+}
+
+.post-item:hover .delete-btn {
+  opacity: 1;
 }
 
 .delete-btn:hover {
-  background-color: rgb(220, 38, 38); 
   transform: scale(1.1);
+  box-shadow: var(--shadow-lg);
 }
