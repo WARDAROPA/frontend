@@ -5,6 +5,11 @@
       <span class="nav-title">Wardaropa</span>
     </div>
     
+    <div class="nav-links">
+      <a class="nav-link" [routerLink]="['/home']" routerLinkActive="active">🏠 Inicio</a>
+      <a class="nav-link" [routerLink]="['/noticias']" routerLinkActive="active">📰 Noticias</a>
+    </div>
+
     <div class="nav-actions">
       <a class="nav-user" [routerLink]="['/profile']">{{ currentUser?.username }}</a>
       <button class="btn-logout" (click)="logout()">Cerrar Sesión</button>

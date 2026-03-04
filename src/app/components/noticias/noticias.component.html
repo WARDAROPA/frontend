@@ -1,0 +1,226 @@
+<app-navbar></app-navbar>
+
+<div class="noticias-container">
+  <!-- Header -->
+  <div class="noticias-header">
+    <div class="header-left">
+      <h1>📰 Noticias de Moda</h1>
+      <p class="header-subtitle">Últimas tendencias y publicaciones de la comunidad</p>
+    </div>
+    <button class="btn-create" (click)="toggleCreateModal()">
+      ✏️ Escribir Noticia
+    </button>
+  </div>
+
+  <!-- Filters -->
+  <div class="filters-bar">
+    <button 
+      class="filter-btn" 
+      [class.active]="activeFilter === 'todas'"
+      (click)="setFilter('todas')">
+      🌐 Todas
+    </button>
+    <button 
+      class="filter-btn" 
+      [class.active]="activeFilter === 'n8n'"
+      (click)="setFilter('n8n')">
+      🤖 Automáticas
+    </button>
+    <button 
+      class="filter-btn" 
+      [class.active]="activeFilter === 'usuario'"
+      (click)="setFilter('usuario')">
+      👤 Comunidad
+    </button>
+  </div>
+
+  <!-- News Grid -->
+  <div class="noticias-grid">
+    <div 
+      class="noticia-card" 
+      *ngFor="let noticia of filteredNoticias"
+      (click)="openDetail(noticia)">
+      
+      <div class="noticia-image" *ngIf="noticia.imagen">
+        <img [src]="noticia.imagen" [alt]="noticia.titulo" />
+        <span class="noticia-badge" [class.badge-auto]="noticia.fuente === 'n8n'" [class.badge-user]="noticia.fuente === 'usuario'">
+          {{ noticia.fuente === 'n8n' ? '🤖 Auto' : '👤 Usuario' }}
+        </span>
+      </div>
+      <div class="noticia-image placeholder" *ngIf="!noticia.imagen">
+        <div class="placeholder-icon">📰</div>
+        <span class="noticia-badge" [class.badge-auto]="noticia.fuente === 'n8n'" [class.badge-user]="noticia.fuente === 'usuario'">
+          {{ noticia.fuente === 'n8n' ? '🤖 Auto' : '👤 Usuario' }}
+        </span>
+      </div>
+
+      <div class="noticia-content">
+        <h3 class="noticia-titulo">{{ noticia.titulo }}</h3>
+        <p class="noticia-texto">{{ truncateText(noticia.texto) }}</p>
+        
+        <div class="noticia-meta">
+          <span class="noticia-author" *ngIf="noticia.username">
+            {{ noticia.username }}
+          </span>
+          <span class="noticia-author" *ngIf="!noticia.username">
+            Wardaropa Bot
+          </span>
+          <span class="noticia-time">{{ getTimeAgo(noticia.created_at) }}</span>
+        </div>
+
+        <div class="noticia-actions">
+          <button 
+            class="action-btn" 
+            [class.liked]="noticia.user_liked"
+            (click)="toggleLike(noticia, $event)">
+            {{ noticia.user_liked ? '❤️' : '🤍' }} {{ noticia.likes_count }}
+          </button>
+          <button class="action-btn">
+            💬 {{ noticia.comments_count }}
+          </button>
+          <button 
+            class="action-btn delete" 
+            *ngIf="noticia.usuario_id === currentUser?.id"
+            (click)="deleteNoticia(noticia, $event)">
+            🗑️
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Empty State -->
+  <div class="empty-state" *ngIf="filteredNoticias.length === 0">
+    <div class="empty-icon">📰</div>
+    <p>No hay noticias todavía</p>
+    <p class="subtitle">¡Sé el primero en compartir una noticia de moda!</p>
+  </div>
+
+  <!-- Create News Modal -->
+  <div class="modal-overlay" *ngIf="showCreateModal" (click)="toggleCreateModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>✏️ Crear nueva noticia</h3>
+        <button class="close-btn" (click)="toggleCreateModal()">✕</button>
+      </div>
+      
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="titulo">Título *</label>
+          <input 
+            type="text" 
+            id="titulo" 
+            [(ngModel)]="newTitulo"
+            placeholder="Título de la noticia..."
+            class="form-input"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="texto">Contenido *</label>
+          <textarea 
+            id="texto" 
+            [(ngModel)]="newTexto"
+            placeholder="Escribe el contenido de la noticia..."
+            rows="6"
+            class="form-textarea"
+          ></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="imagen">Imagen (opcional)</label>
+          <input 
+            type="file" 
+            id="imagen" 
+            accept="image/*" 
+            (change)="onImageSelected($event)"
+            class="file-input"
+          />
+          <div class="file-name" *ngIf="selectedFileName">{{ selectedFileName }}</div>
+          <div class="preview" *ngIf="newImagen">
+            <img [src]="newImagen" alt="Preview" />
+          </div>
+        </div>
+
+        <div class="modal-actions">
+          <button class="btn-cancel" (click)="toggleCreateModal()">Cancelar</button>
+          <button class="btn-publish" (click)="createNoticia()">Publicar Noticia</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Detail Modal -->
+  <div class="modal-overlay" *ngIf="showDetailModal" (click)="closeDetail()">
+    <div class="modal-content detail-modal" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>{{ detailNoticia?.titulo }}</h3>
+        <button class="close-btn" (click)="closeDetail()">✕</button>
+      </div>
+      
+      <div class="modal-body">
+        <div class="detail-image" *ngIf="detailNoticia?.imagen">
+          <img [src]="detailNoticia!.imagen!" [alt]="detailNoticia!.titulo" />
+        </div>
+
+        <div class="detail-meta">
+          <span class="detail-badge" [class.badge-auto]="detailNoticia?.fuente === 'n8n'" [class.badge-user]="detailNoticia?.fuente === 'usuario'">
+            {{ detailNoticia?.fuente === 'n8n' ? '🤖 Automática' : '👤 Comunidad' }}
+          </span>
+          <span class="detail-author">
+            {{ detailNoticia?.username || 'Wardaropa Bot' }}
+          </span>
+          <span class="detail-time" *ngIf="detailNoticia">
+            {{ getTimeAgo(detailNoticia.created_at) }}
+          </span>
+        </div>
+
+        <div class="detail-text">
+          {{ detailNoticia?.texto }}
+        </div>
+
+        <div class="detail-actions">
+          <button 
+            class="action-btn-lg" 
+            [class.liked]="detailNoticia?.user_liked"
+            (click)="toggleLike(detailNoticia!)">
+            {{ detailNoticia?.user_liked ? '❤️' : '🤍' }} {{ detailNoticia?.likes_count }} Me gusta
+          </button>
+          <span class="comments-count">💬 {{ detailNoticia?.comments_count }} Comentarios</span>
+        </div>
+
+        <!-- Comments Section -->
+        <div class="comments-section">
+          <h4>Comentarios</h4>
+          
+          <div class="comments-list">
+            <div class="comment" *ngFor="let comment of comments">
+              <div class="comment-header">
+                <div class="comment-avatar">{{ comment.username[0].toUpperCase() }}</div>
+                <div class="comment-info">
+                  <strong>{{ comment.username }}</strong>
+                  <span class="comment-time">{{ getTimeAgo(comment.created_at) }}</span>
+                </div>
+              </div>
+              <p class="comment-text">{{ comment.texto }}</p>
+            </div>
+            
+            <div class="no-comments" *ngIf="comments.length === 0">
+              <p>No hay comentarios todavía. ¡Sé el primero!</p>
+            </div>
+          </div>
+          
+          <div class="add-comment">
+            <textarea 
+              [(ngModel)]="newComment"
+              placeholder="Escribe un comentario..."
+              rows="2"
+              class="form-textarea"
+            ></textarea>
+            <button class="btn-publish" (click)="addComment()">Comentar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
