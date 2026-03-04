@@ -42,7 +42,7 @@
       (click)="openDetail(noticia)">
       
       <div class="noticia-image" *ngIf="noticia.imagen">
-        <img [src]="noticia.imagen" [alt]="noticia.titulo" />
+        <img [src]="getSafeImageUrl(noticia.imagen)" [alt]="noticia.titulo" />
         <span class="noticia-badge" [class.badge-auto]="noticia.fuente === 'n8n'" [class.badge-user]="noticia.fuente === 'usuario'">
           {{ noticia.fuente === 'n8n' ? '🤖 Auto' : '👤 Usuario' }}
         </span>
@@ -160,7 +160,7 @@
       
       <div class="modal-body">
         <div class="detail-image" *ngIf="detailNoticia?.imagen">
-          <img [src]="detailNoticia!.imagen!" [alt]="detailNoticia!.titulo" />
+          <img [src]="getSafeImageUrl(detailNoticia!.imagen!)" [alt]="detailNoticia!.titulo" />
         </div>
 
         <div class="detail-meta">
@@ -175,9 +175,7 @@
           </span>
         </div>
 
-        <div class="detail-text">
-          {{ detailNoticia?.texto }}
-        </div>
+        <div class="detail-text" *ngIf="detailNoticia" [innerHTML]="getSafeHtml(detailNoticia.texto)"></div>
 
         <div class="detail-actions">
           <button 

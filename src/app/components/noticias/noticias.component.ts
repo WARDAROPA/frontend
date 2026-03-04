@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { DomSanitizer, SafeHtml, SafeUrl } from '@angular/platform-browser';
 import { AuthService } from '../../services/auth.service';
 import { NoticiaService } from '../../services/noticia.service';
 import { User } from '../../models/user.model';
@@ -41,7 +42,8 @@ export class NoticiasComponent implements OnInit {
   constructor(
     private authService: AuthService,
     private noticiaService: NoticiaService,
-    private router: Router
+    private router: Router,
+    private sanitizer: DomSanitizer
   ) {}
 
   ngOnInit(): void {
@@ -220,8 +222,24 @@ export class NoticiasComponent implements OnInit {
     return date.toLocaleDateString('es-ES', { day: 'numeric', month: 'short' });
   }
 
-  truncateText(text: string, maxLength: number = 120): string {
-    if (text.length <= maxLength) return text;
-    return text.substring(0, maxLength) + '...';
+  truncateText(text: string, maxLength: number = 150): string {
+    // Strip HTML tags for the card preview
+    const stripped = text.replace(/<[^>]*>/g, '');
+    if (stripped.length <= maxLength) return stripped;
+    return stripped.substring(0, maxLength) + '...';
+  }
+
+  getSafeHtml(html: string): SafeHtml {
+    return this.sanitizer.bypassSecurityTrustHtml(html);
+  }
+
+  getSafeImageUrl(base64: string): SafeUrl {
+    if (!base64) return '';
+    // If it already has a data URI prefix, use as-is
+    if (base64.startsWith('data:')) {
+      return this.sanitizer.bypassSecurityTrustUrl(base64);
+    }
+    // Otherwise, assume JPEG and add prefix
+    return this.sanitizer.bypassSecurityTrustUrl('data:image/jpeg;base64,' + base64);
   }
 }

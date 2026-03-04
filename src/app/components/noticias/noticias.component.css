@@ -480,10 +480,35 @@
 
 .detail-text {
   font-size: 15px;
-  line-height: 1.7;
+  line-height: 1.8;
   color: var(--text-primary);
   margin-bottom: 20px;
-  white-space: pre-wrap;
+}
+
+/* Estilos para el HTML renderizado dentro del detalle */
+.detail-text h2 {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 24px 0 12px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--border-color);
+}
+
+.detail-text h3 {
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 20px 0 10px;
+}
+
+.detail-text p {
+  margin-bottom: 14px;
+}
+
+.detail-text h2:first-child,
+.detail-text h3:first-child {
+  margin-top: 0;
 }
 
 .detail-actions {
