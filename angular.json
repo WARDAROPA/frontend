@@ -33,6 +33,11 @@
               ],
               "outputHashing": "all"
             },
+            "github-pages": {
+              "outputHashing": "all",
+              "baseHref": "/frontend/",
+              "deployUrl": "/frontend/"
+            },
             "development": {
               "buildOptimizer": false,
               "optimization": false,
