@@ -41,7 +41,7 @@ export class ProfileComponent implements OnInit {
   }
 
   loadPosts() {
-    this.http.get(`http://localhost:3000/users/${this.user.id}/posts`).subscribe({
+    this.http.get(`https://4.233.184.106/users/${this.user.id}/posts`).subscribe({
       next: (res: any) => {
         this.posts = res.posts || [];
         this.loadingPosts = false;
@@ -56,7 +56,7 @@ export class ProfileComponent implements OnInit {
   deletePost(postId: number) {
     if (confirm('¿Estás seguro de que quieres eliminar esta prenda de tu armario?')) {
       
-      this.http.delete(`http://localhost:3000/posts/${postId}`, {
+      this.http.delete(`https://4.233.184.106/posts/${postId}`, {
         body: { usuario_id: this.user.id }
       }).subscribe({
         next: (res: any) => {
