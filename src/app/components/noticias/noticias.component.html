@@ -47,11 +47,11 @@
           {{ noticia.fuente === 'n8n' ? '🤖 Auto' : '👤 Usuario' }}
         </span>
       </div>
-      <div class="noticia-image placeholder" *ngIf="!noticia.imagen">
-        <div class="placeholder-icon">📰</div>
-        <span class="noticia-badge" [class.badge-auto]="noticia.fuente === 'n8n'" [class.badge-user]="noticia.fuente === 'usuario'">
+      <div class="noticia-text-preview" *ngIf="!noticia.imagen">
+        <span class="noticia-badge inline-badge" [class.badge-auto]="noticia.fuente === 'n8n'" [class.badge-user]="noticia.fuente === 'usuario'">
           {{ noticia.fuente === 'n8n' ? '🤖 Auto' : '👤 Usuario' }}
         </span>
+        <p class="text-preview-content">{{ truncateText(noticia.texto, 250) }}</p>
       </div>
 
       <div class="noticia-content">
