@@ -17,8 +17,6 @@ import { NavbarComponent } from '../navbar/navbar.component';
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit, OnDestroy {
-  private static readonly MAX_UPLOAD_BYTES = 2_500_000;
-
   currentUser: User | null = null;
   isConnected = false;
   posts: Post[] = [];
@@ -123,97 +121,15 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   onFileSelected(event: any): void {
-    const file = event?.target?.files?.[0] as File | undefined;
-    if (!file) {
-      return;
-    }
-
-    if (!file.type.startsWith('image/')) {
-      alert('Selecciona un archivo de imagen valido.');
-      return;
-    }
-
-    this.selectedFileName = file.name;
-
-    this.compressImageFile(file, 1600, 0.85, HomeComponent.MAX_UPLOAD_BYTES)
-      .then((compressedDataUrl) => {
-        this.newPostPhoto = compressedDataUrl;
-      })
-      .catch((error) => {
-        console.error('Error al procesar imagen:', error);
-        alert('No se pudo procesar la imagen seleccionada.');
-      });
-  }
-
-  private async compressImageFile(
-    file: File,
-    maxDimension: number,
-    initialQuality: number,
-    maxBytes: number
-  ): Promise<string> {
-    const originalDataUrl = await this.fileToDataUrl(file);
-    const image = await this.loadImage(originalDataUrl);
-    const size = this.scaleDimensions(image.width, image.height, maxDimension);
-
-    const canvas = document.createElement('canvas');
-    canvas.width = size.width;
-    canvas.height = size.height;
-
-    const context = canvas.getContext('2d');
-    if (!context) {
-      return originalDataUrl;
-    }
-
-    context.drawImage(image, 0, 0, size.width, size.height);
-
-    let quality = initialQuality;
-    let compressedDataUrl = canvas.toDataURL('image/jpeg', quality);
-
-    while (this.dataUrlSizeBytes(compressedDataUrl) > maxBytes && quality > 0.45) {
-      quality -= 0.08;
-      compressedDataUrl = canvas.toDataURL('image/jpeg', quality);
-    }
-
-    return compressedDataUrl;
-  }
-
-  private fileToDataUrl(file: File): Promise<string> {
-    return new Promise((resolve, reject) => {
+    const file = event.target.files[0];
+    if (file) {
+      this.selectedFileName = file.name;
       const reader = new FileReader();
-      reader.onload = () => resolve(reader.result as string);
-      reader.onerror = () => reject(reader.error);
+      reader.onload = () => {
+        this.newPostPhoto = reader.result as string;
+      };
       reader.readAsDataURL(file);
-    });
-  }
-
-  private loadImage(dataUrl: string): Promise<HTMLImageElement> {
-    return new Promise((resolve, reject) => {
-      const image = new Image();
-      image.onload = () => resolve(image);
-      image.onerror = reject;
-      image.src = dataUrl;
-    });
-  }
-
-  private scaleDimensions(width: number, height: number, maxDimension: number): { width: number; height: number } {
-    if (width <= maxDimension && height <= maxDimension) {
-      return { width, height };
     }
-
-    const ratio = width / height;
-    if (ratio >= 1) {
-      return { width: maxDimension, height: Math.round(maxDimension / ratio) };
-    }
-
-    return { width: Math.round(maxDimension * ratio), height: maxDimension };
-  }
-
-  private dataUrlSizeBytes(dataUrl: string): number {
-    const base64 = dataUrl.split(',')[1] || '';
-    const paddingMatch = base64.match(/=*$/);
-    const padding = paddingMatch ? paddingMatch[0].length : 0;
-
-    return Math.floor((base64.length * 3) / 4) - padding;
   }
 
   createPost(): void {
