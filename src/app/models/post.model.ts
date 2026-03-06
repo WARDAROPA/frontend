@@ -1,6 +1,7 @@
 export interface Post {
   id: number;
   descripcion: string;
+  descripcion_prenda?: string;
   foto: string;
   created_at: string;
   usuario_id: number;
@@ -21,7 +22,12 @@ export interface Comment {
 export interface CreatePostRequest {
   usuario_id: number;
   descripcion: string;
+  descripcion_prenda?: string;
   foto: string;
+}
+
+export interface GeneratePostDescriptionIARequest {
+  usuario_id: number;
 }
 
 export interface CreateCommentRequest {

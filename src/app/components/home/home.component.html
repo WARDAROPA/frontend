@@ -33,13 +33,37 @@
         </div>
 
         <div class="form-group">
-          <label for="description">Descripción</label>
+          <label for="description">Pie de foto (visible en el post)</label>
           <textarea 
             id="description" 
             [(ngModel)]="newPostDescription"
             placeholder="Describe tu outfit..."
             rows="3"
           ></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="garment-description">Descripción de la prenda</label>
+          <textarea
+            id="garment-description"
+            [(ngModel)]="newGarmentDescription"
+            placeholder="Ej: Blazer oversize beige, corte recto, tejido ligero..."
+            rows="4"
+          ></textarea>
+        </div>
+
+        <div class="form-group ai-option">
+          <label class="checkbox-label" for="use-ai-description">
+            <input
+              type="checkbox"
+              id="use-ai-description"
+              [(ngModel)]="useAIDescription"
+            />
+            Rellenar descripcion de prenda con IA
+          </label>
+          <p class="ai-hint" *ngIf="useAIDescription">
+            Al publicar, se enviara la imagen a n8n para generar una descripcion exhaustiva.
+          </p>
         </div>
 
         <div class="modal-actions">

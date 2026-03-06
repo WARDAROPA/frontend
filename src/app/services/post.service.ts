@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Post, Comment, CreatePostRequest, CreateCommentRequest, LikeRequest } from '../models/post.model';
+import { Post, Comment, CreatePostRequest, CreateCommentRequest, LikeRequest, GeneratePostDescriptionIARequest } from '../models/post.model';
 
 @Injectable({
   providedIn: 'root'
@@ -20,6 +20,13 @@ export class PostService {
     return this.http.post<{ success: boolean; message: string; postId: number }>(
       `${this.apiUrl}/posts`,
       post
+    );
+  }
+
+  generatePostDescriptionWithIA(postId: number, payload: GeneratePostDescriptionIARequest): Observable<{ success: boolean; message: string }> {
+    return this.http.post<{ success: boolean; message: string }>(
+      `${this.apiUrl}/posts/${postId}/ia-description`,
+      payload
     );
   }
 

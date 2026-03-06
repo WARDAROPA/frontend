@@ -23,8 +23,10 @@ export class HomeComponent implements OnInit, OnDestroy {
   
   showCreatePost = false;
   newPostDescription = '';
+  newGarmentDescription = '';
   newPostPhoto = '';
   selectedFileName = '';
+  useAIDescription = false;
   
   showCommentsModal = false;
   selectedPost: Post | null = null;
@@ -111,8 +113,10 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.showCreatePost = !this.showCreatePost;
     if (!this.showCreatePost) {
       this.newPostDescription = '';
+      this.newGarmentDescription = '';
       this.newPostPhoto = '';
       this.selectedFileName = '';
+      this.useAIDescription = false;
     }
   }
 
@@ -137,10 +141,22 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.postService.createPost({
       usuario_id: this.currentUser.id,
       descripcion: this.newPostDescription,
+      descripcion_prenda: this.newGarmentDescription,
       foto: this.newPostPhoto
     }).subscribe({
       next: (response) => {
         if (response.success) {
+          if (this.useAIDescription) {
+            this.postService.generatePostDescriptionWithIA(response.postId, {
+              usuario_id: this.currentUser.id
+            }).subscribe({
+              error: (iaError) => {
+                console.error('Error al solicitar descripcion IA:', iaError);
+                alert('La prenda se publico, pero fallo la solicitud de descripcion con IA.');
+              }
+            });
+          }
+
           this.toggleCreatePost();
           this.loadPosts();
         }
