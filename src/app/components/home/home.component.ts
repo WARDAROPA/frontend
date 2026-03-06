@@ -138,8 +138,10 @@ export class HomeComponent implements OnInit, OnDestroy {
       return;
     }
 
+    const currentUser = this.currentUser;
+
     this.postService.createPost({
-      usuario_id: this.currentUser.id,
+      usuario_id: currentUser.id,
       descripcion: this.newPostDescription,
       descripcion_prenda: this.newGarmentDescription,
       foto: this.newPostPhoto
@@ -148,7 +150,7 @@ export class HomeComponent implements OnInit, OnDestroy {
         if (response.success) {
           if (this.useAIDescription) {
             this.postService.generatePostDescriptionWithIA(response.postId, {
-              usuario_id: this.currentUser.id
+              usuario_id: currentUser.id
             }).subscribe({
               error: (iaError) => {
                 console.error('Error al solicitar descripcion IA:', iaError);
