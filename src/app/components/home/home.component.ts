@@ -32,6 +32,8 @@ export class HomeComponent implements OnInit, OnDestroy {
   selectedPost: Post | null = null;
   comments: any[] = [];
   newComment = '';
+  matchLoadingByPost: Record<number, boolean> = {};
+  matchResultByPost: Record<number, { porcentaje: number; descripcion: string }> = {};
 
   constructor(
     private authService: AuthService,
@@ -214,6 +216,36 @@ export class HomeComponent implements OnInit, OnDestroy {
       },
       error: (error) => {
         console.error('Error al añadir comentario:', error);
+      }
+    });
+  }
+
+  getPostMatch(post: Post): void {
+    if (!this.currentUser) {
+      alert('Debes iniciar sesion para calcular el match.');
+      return;
+    }
+
+    const currentUser = this.currentUser;
+    this.matchLoadingByPost[post.id] = true;
+
+    this.postService.getPostMatch(post.id, {
+      usuario_id: currentUser.id
+    }).subscribe({
+      next: (response) => {
+        if (response.success) {
+          this.matchResultByPost[post.id] = {
+            porcentaje: response.porcentaje,
+            descripcion: response.descripcion
+          };
+        }
+      },
+      error: (error) => {
+        console.error('Error al calcular match:', error);
+        alert('No se pudo calcular el match de esta prenda.');
+      },
+      complete: () => {
+        this.matchLoadingByPost[post.id] = false;
       }
     });
   }

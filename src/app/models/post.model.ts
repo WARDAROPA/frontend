@@ -30,6 +30,16 @@ export interface GeneratePostDescriptionIARequest {
   usuario_id: number;
 }
 
+export interface PostMatchRequest {
+  usuario_id: number;
+}
+
+export interface PostMatchResponse {
+  success: boolean;
+  porcentaje: number;
+  descripcion: string;
+}
+
 export interface CreateCommentRequest {
   usuario_id: number;
   texto: string;

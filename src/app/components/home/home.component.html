@@ -134,11 +134,22 @@
             {{ post.user_liked ? '❤️' : '🤍' }} {{ post.likes_count }}
           </button>
           <button class="action-btn comment" (click)="openComments(post)">💬 {{ post.comments_count }}</button>
-          <button class="action-btn share">📤</button>
+          <button
+            class="action-btn match"
+            [disabled]="matchLoadingByPost[post.id]"
+            (click)="getPostMatch(post)"
+          >
+            {{ matchLoadingByPost[post.id] ? '⏳ Calculando...' : '🧠 Match IA' }}
+          </button>
         </div>
         
         <div class="post-description">
           <strong>{{ post.username }}</strong> {{ post.descripcion }}
+        </div>
+
+        <div class="post-match-result" *ngIf="matchResultByPost[post.id] as matchResult">
+          <p class="match-score">Match con tu armario: <strong>{{ matchResult.porcentaje }}%</strong></p>
+          <p class="match-description">{{ matchResult.descripcion }}</p>
         </div>
       </div>
     </div>
