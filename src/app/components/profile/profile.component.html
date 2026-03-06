@@ -24,27 +24,114 @@
   <hr class="divider">
 
   <div class="posts-section">
-    <div *ngIf="loadingPosts" class="loading-state">
-      Cargando armario...
+    <div class="section-tabs">
+      <button
+        class="tab-btn"
+        [class.active]="activeTab === 'armario'"
+        (click)="setTab('armario')"
+      >
+        Mi Armario
+      </button>
+      <button
+        class="tab-btn"
+        [class.active]="activeTab === 'outfits'"
+        (click)="setTab('outfits')"
+      >
+        Mis Outfits
+      </button>
+
+      <button class="new-outfit-btn" *ngIf="activeTab === 'outfits'" (click)="openCreateOutfit()">
+        ➕ Nuevo Outfit
+      </button>
     </div>
 
-    <div *ngIf="!loadingPosts && posts.length === 0" class="empty-state">
-      <span class="empty-icon">👕</span>
-      <h3>El armario está vacío</h3>
-      <p>Sube tu primera prenda para empezar a mostrar tu estilo.</p>
-    </div>
+    <div *ngIf="activeTab === 'armario'">
+      <div *ngIf="loadingPosts" class="loading-state">
+        Cargando armario...
+      </div>
 
-    <div class="posts-grid" *ngIf="!loadingPosts && posts.length > 0">
-      <div class="post-item" *ngFor="let post of posts">
-        <img [src]="post.foto" [alt]="post.descripcion || 'Prenda'">
-        
-        <div class="post-overlay">
-          <span class="stat">❤️ {{ post.likes_count || 0 }}</span>
-          <span class="stat">💬 {{ post.comments_count || 0 }}</span>
+      <div *ngIf="!loadingPosts && posts.length === 0" class="empty-state">
+        <span class="empty-icon">👕</span>
+        <h3>El armario está vacío</h3>
+        <p>Sube tu primera prenda para empezar a mostrar tu estilo.</p>
+      </div>
+
+      <div class="posts-grid" *ngIf="!loadingPosts && posts.length > 0">
+        <div class="post-item" *ngFor="let post of posts">
+          <img [src]="post.foto" [alt]="post.descripcion || 'Prenda'">
+          
+          <div class="post-overlay">
+            <span class="stat">❤️ {{ post.likes_count || 0 }}</span>
+            <span class="stat">💬 {{ post.comments_count || 0 }}</span>
+          </div>
+          <button class="delete-btn" (click)="deletePost(post.id)" title="Borrar prenda">
+              🗑️
+            </button>
         </div>
-        <button class="delete-btn" (click)="deletePost(post.id)" title="Borrar prenda">
-            🗑️
+      </div>
+    </div>
+
+    <div *ngIf="activeTab === 'outfits'">
+      <div *ngIf="loadingOutfits" class="loading-state">
+        Cargando outfits...
+      </div>
+
+      <div *ngIf="!loadingOutfits && outfits.length === 0" class="empty-state">
+        <span class="empty-icon">🧩</span>
+        <h3>No tienes outfits todavía</h3>
+        <p>Combina 4 prendas de tu armario para crear tu primer outfit.</p>
+      </div>
+
+      <div class="outfits-grid" *ngIf="!loadingOutfits && outfits.length > 0">
+        <div class="outfit-card" *ngFor="let outfit of outfits">
+          <div class="outfit-top">
+            <h4>{{ outfit.nombre || 'Outfit sin nombre' }}</h4>
+            <button class="delete-outfit-btn" (click)="deleteOutfit(outfit.id)">🗑️</button>
+          </div>
+
+          <div class="outfit-mosaic">
+            <div class="outfit-slot" *ngFor="let slot of getOutfitSlots(outfit)">
+              <img *ngIf="slot" [src]="slot.foto" [alt]="slot.descripcion || 'Prenda'">
+            </div>
+          </div>
+
+          <p class="outfit-date">{{ outfit.created_at | date:'short' }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="create-outfit-modal" *ngIf="showCreateOutfit">
+    <div class="create-outfit-content">
+      <div class="modal-head">
+        <h3>Crear Outfit</h3>
+        <button class="close-modal-btn" (click)="closeCreateOutfit()">✕</button>
+      </div>
+
+      <div class="modal-body">
+        <label for="outfit-name">Nombre del outfit (opcional)</label>
+        <input id="outfit-name" type="text" [(ngModel)]="newOutfitName" placeholder="Ej: Look urbano de invierno">
+
+        <p class="selection-counter">Seleccionadas: {{ selectedPostIds.length }}/4</p>
+
+        <div class="select-posts-grid">
+          <button
+            type="button"
+            class="select-post-item"
+            *ngFor="let post of posts"
+            [class.selected]="isSelected(post.id)"
+            (click)="togglePostSelection(post.id)"
+          >
+            <img [src]="post.foto" [alt]="post.descripcion || 'Prenda'">
           </button>
+        </div>
+      </div>
+
+      <div class="modal-foot">
+        <button class="cancel-btn" (click)="closeCreateOutfit()">Cancelar</button>
+        <button class="save-btn" [disabled]="selectedPostIds.length !== 4" (click)="createOutfit()">
+          Guardar Outfit
+        </button>
       </div>
     </div>
   </div>
