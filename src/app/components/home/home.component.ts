@@ -17,7 +17,7 @@ import { NavbarComponent } from '../navbar/navbar.component';
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit, OnDestroy {
-  private static readonly MAX_UPLOAD_BYTES = 2_500_000;
+  private static readonly MAX_UPLOAD_BYTES = 850_000;
 
   currentUser: User | null = null;
   isConnected = false;
@@ -137,6 +137,13 @@ export class HomeComponent implements OnInit, OnDestroy {
 
     this.compressImageFile(file, 1600, 0.85, HomeComponent.MAX_UPLOAD_BYTES)
       .then((compressedDataUrl) => {
+        const sizeBytes = this.dataUrlSizeBytes(compressedDataUrl);
+        if (sizeBytes > HomeComponent.MAX_UPLOAD_BYTES) {
+          alert('La imagen sigue siendo demasiado grande. Prueba con una imagen mas ligera.');
+          this.newPostPhoto = '';
+          return;
+        }
+
         this.newPostPhoto = compressedDataUrl;
       })
       .catch((error) => {
@@ -249,6 +256,12 @@ export class HomeComponent implements OnInit, OnDestroy {
       },
       error: (error) => {
         console.error('Error al crear post:', error);
+
+        if (error?.status === 413) {
+          alert('La imagen supera el limite del servidor (413). Elige una imagen mas pequena.');
+          return;
+        }
+
         alert('Error al crear el post');
       }
     });
