@@ -255,4 +255,21 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.wsService.disconnect();
     this.router.navigate(['/login']);
   }
+
+  deletePost(post: Post): void {
+    if (!this.currentUser || post.usuario_id !== this.currentUser.id) return;
+    if (!confirm('¿Estás seguro de que quieres eliminar esta publicación?')) return;
+
+    this.postService.deletePost(post.id).subscribe({
+      next: (response) => {
+        if (response.success) {
+          this.loadPosts();
+        }
+      },
+      error: (error) => {
+        console.error('Error al borrar post:', error);
+        alert('Error al borrar la publicación');
+      }
+    });
+  }
 }

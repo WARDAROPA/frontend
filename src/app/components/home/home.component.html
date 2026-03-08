@@ -110,7 +110,12 @@
   </div>
 
   <div class="feed">
-    <h2>Feed de Moda</h2>
+    <div class="feed-header">
+      <h2>Feed de Moda</h2>
+      <button class="header-new-post-btn" (click)="toggleCreatePost()" *ngIf="!showCreatePost">
+        ➕ Nueva Publicación
+      </button>
+    </div>
     
     <div class="posts-grid">
       <div class="post-card" *ngFor="let post of posts">
@@ -140,6 +145,13 @@
             (click)="getPostMatch(post)"
           >
             {{ matchLoadingByPost[post.id] ? '⏳ Calculando...' : '🧠 Match IA' }}
+          </button>
+          <button
+            class="action-btn delete"
+            *ngIf="currentUser && post.usuario_id === currentUser.id"
+            (click)="deletePost(post)"
+          >
+            🗑️ Borrar
           </button>
         </div>
         

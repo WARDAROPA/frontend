@@ -13,9 +13,29 @@ export class AuthService {
   public currentUser$ = this.currentUserSubject.asObservable();
 
   constructor(private http: HttpClient) {
+    this.restoreSession();
+  }
+
+  private restoreSession(): void {
+    const token = localStorage.getItem('authToken');
     const savedUser = localStorage.getItem('currentUser');
-    if (savedUser) {
+    if (token && savedUser) {
+      if (this.isTokenExpired(token)) {
+        this.logout();
+        return;
+      }
       this.currentUserSubject.next(JSON.parse(savedUser));
+    } else {
+      this.logout();
+    }
+  }
+
+  private isTokenExpired(token: string): boolean {
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      return payload.exp * 1000 < Date.now();
+    } catch {
+      return true;
     }
   }
 
@@ -23,9 +43,10 @@ export class AuthService {
     return this.http.post<AuthResponse>(`${this.apiUrl}/login`, credentials)
       .pipe(
         tap(response => {
-          if (response.success && response.user) {
-            this.currentUserSubject.next(response.user);
+          if (response.success && response.user && response.token) {
+            localStorage.setItem('authToken', response.token);
             localStorage.setItem('currentUser', JSON.stringify(response.user));
+            this.currentUserSubject.next(response.user);
           }
         })
       );
@@ -38,6 +59,7 @@ export class AuthService {
   logout(): void {
     this.currentUserSubject.next(null);
     localStorage.removeItem('currentUser');
+    localStorage.removeItem('authToken');
   }
 
   get currentUserValue(): User | null {
@@ -45,6 +67,10 @@ export class AuthService {
   }
 
   isAuthenticated(): boolean {
+    const token = localStorage.getItem('authToken');
+    if (!token || this.isTokenExpired(token)) {
+      return false;
+    }
     return this.currentUserSubject.value !== null;
   }
 }

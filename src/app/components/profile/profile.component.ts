@@ -32,6 +32,12 @@ export class ProfileComponent implements OnInit {
   newOutfitName = '';
   selectedPostIds: number[] = [];
 
+  showCreatePost = false;
+  newPostDescription = '';
+  newGarmentDescription = '';
+  newPostPhoto = '';
+  selectedFileName = '';
+
   private readonly apiUrl = 'https://4.233.184.106';
 
   constructor(
@@ -83,10 +89,7 @@ export class ProfileComponent implements OnInit {
 
   deletePost(postId: number) {
     if (confirm('¿Estás seguro de que quieres eliminar esta prenda de tu armario?')) {
-      
-      this.http.delete(`${this.apiUrl}/posts/${postId}`, {
-        body: { usuario_id: this.user.id }
-      }).subscribe({
+      this.http.delete(`${this.apiUrl}/posts/${postId}`).subscribe({
         next: (res: any) => {
           if (res.success) {
             this.posts = this.posts.filter(p => p.id !== postId);
@@ -99,6 +102,53 @@ export class ProfileComponent implements OnInit {
         }
       });
     }
+  }
+
+  toggleCreatePost() {
+    this.showCreatePost = !this.showCreatePost;
+    if (!this.showCreatePost) {
+      this.newPostDescription = '';
+      this.newGarmentDescription = '';
+      this.newPostPhoto = '';
+      this.selectedFileName = '';
+    }
+  }
+
+  onFileSelected(event: any) {
+    const file = event.target.files[0];
+    if (file) {
+      this.selectedFileName = file.name;
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.newPostPhoto = reader.result as string;
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+
+  createPost() {
+    if (!this.newPostPhoto) {
+      alert('Debes seleccionar una imagen');
+      return;
+    }
+
+    this.http.post(`${this.apiUrl}/posts`, {
+      usuario_id: this.user.id,
+      descripcion: this.newPostDescription,
+      descripcion_prenda: this.newGarmentDescription,
+      foto: this.newPostPhoto
+    }).subscribe({
+      next: (res: any) => {
+        if (res.success) {
+          this.toggleCreatePost();
+          this.loadPosts();
+        }
+      },
+      error: (err) => {
+        console.error('Error al crear post:', err);
+        alert('Error al crear la publicación.');
+      }
+    });
   }
 
   openCreateOutfit() {
@@ -162,9 +212,7 @@ export class ProfileComponent implements OnInit {
       return;
     }
 
-    this.http.delete(`${this.apiUrl}/outfits/${outfitId}`, {
-      body: { usuario_id: this.user.id }
-    }).subscribe({
+    this.http.delete(`${this.apiUrl}/outfits/${outfitId}`).subscribe({
       next: (res: any) => {
         if (res.success) {
           this.outfits = this.outfits.filter((outfit) => outfit.id !== outfitId);

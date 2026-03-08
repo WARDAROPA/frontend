@@ -30,12 +30,8 @@
   border: 1px solid rgba(239, 68, 68, 0.2);
 }
 
-.feed h2 {
-  font-size: 28px;
-  font-weight: 700;
-  color: var(--text-primary);
-  margin-bottom: 32px;
-  letter-spacing: -0.5px;
+.feed {
+  margin-top: 16px;
 }
 
 .posts-grid {
@@ -188,6 +184,48 @@
 .empty-state p {
   font-size: 18px;
   margin-bottom: 10px;
+}
+
+.feed-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 32px;
+}
+
+.feed-header h2 {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -0.5px;
+  margin: 0;
+}
+
+.header-new-post-btn {
+  background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+  color: white;
+  border: none;
+  border-radius: var(--radius-md);
+  padding: 12px 24px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: var(--shadow-md);
+  transition: all 0.2s ease;
+}
+
+.header-new-post-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+.action-btn.delete {
+  color: var(--danger-color);
+  margin-left: auto;
+}
+
+.action-btn.delete:hover {
+  background: rgba(239, 68, 68, 0.1);
 }
 
 .empty-state .subtitle {

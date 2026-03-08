@@ -43,6 +43,9 @@
       <button class="new-outfit-btn" *ngIf="activeTab === 'outfits'" (click)="openCreateOutfit()">
         ➕ Nuevo Outfit
       </button>
+      <button class="new-outfit-btn" *ngIf="activeTab === 'armario'" (click)="toggleCreatePost()">
+        ➕ Nueva Publicación
+      </button>
     </div>
 
     <div *ngIf="activeTab === 'armario'">
@@ -132,6 +135,51 @@
         <button class="save-btn" [disabled]="selectedPostIds.length !== 4" (click)="createOutfit()">
           Guardar Outfit
         </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="create-outfit-modal" *ngIf="showCreatePost">
+    <div class="create-outfit-content">
+      <div class="modal-head">
+        <h3>Nueva Publicación</h3>
+        <button class="close-modal-btn" (click)="toggleCreatePost()">✕</button>
+      </div>
+
+      <div class="modal-body">
+        <label for="profile-photo">Foto *</label>
+        <input
+          type="file"
+          id="profile-photo"
+          accept="image/*"
+          (change)="onFileSelected($event)"
+          class="file-input"
+        />
+        <div class="file-name" *ngIf="selectedFileName">{{ selectedFileName }}</div>
+        <div class="preview" *ngIf="newPostPhoto">
+          <img [src]="newPostPhoto" alt="Preview" />
+        </div>
+
+        <label for="profile-desc" style="margin-top: 16px">Pie de foto</label>
+        <textarea
+          id="profile-desc"
+          [(ngModel)]="newPostDescription"
+          placeholder="Describe tu outfit..."
+          rows="3"
+        ></textarea>
+
+        <label for="profile-garment" style="margin-top: 12px">Descripción de la prenda</label>
+        <textarea
+          id="profile-garment"
+          [(ngModel)]="newGarmentDescription"
+          placeholder="Ej: Blazer oversize beige, corte recto..."
+          rows="3"
+        ></textarea>
+      </div>
+
+      <div class="modal-foot">
+        <button class="cancel-btn" (click)="toggleCreatePost()">Cancelar</button>
+        <button class="save-btn" [disabled]="!newPostPhoto" (click)="createPost()">Publicar</button>
       </div>
     </div>
   </div>

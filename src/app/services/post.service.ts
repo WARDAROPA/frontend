@@ -64,4 +64,10 @@ export class PostService {
       comment
     );
   }
+
+  deletePost(postId: number): Observable<{ success: boolean; message: string }> {
+    return this.http.delete<{ success: boolean; message: string }>(
+      `${this.apiUrl}/posts/${postId}`
+    );
+  }
 }

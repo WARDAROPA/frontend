@@ -186,3 +186,10 @@ button:disabled {
   content: '✕';
   font-weight: 700;
 }
+
+.field-error {
+  color: var(--danger-color);
+  font-size: 13px;
+  margin-top: 4px;
+  display: block;
+}

@@ -28,9 +28,14 @@
           type="email"
           [(ngModel)]="email"
           name="email"
+          #emailField="ngModel"
           placeholder="tu@email.com"
           required
+          email
         />
+        <span class="field-error" *ngIf="emailField.touched && emailField.errors?.['email']">
+          Introduce un email válido
+        </span>
       </div>
 
       <div class="form-group">
