@@ -131,6 +131,11 @@
   cursor: pointer;
 }
 
+.new-outfit-btn.ai-btn {
+  margin-left: 0;
+  background: linear-gradient(135deg, #0ea5e9, #2563eb);
+}
+
 .posts-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -323,6 +328,10 @@
   background: var(--bg-primary);
   border: 1px solid var(--border-color);
   box-shadow: var(--shadow-xl);
+}
+
+.create-outfit-content.compact-modal {
+  width: min(640px, 92vw);
 }
 
 .modal-head {

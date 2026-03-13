@@ -43,6 +43,9 @@
       <button class="new-outfit-btn" *ngIf="activeTab === 'outfits'" (click)="openCreateOutfit()">
         ➕ Nuevo Outfit
       </button>
+      <button class="new-outfit-btn ai-btn" *ngIf="activeTab === 'outfits'" (click)="openGenerateOutfitIA()">
+        🧠 Generar con IA
+      </button>
       <button class="new-outfit-btn" *ngIf="activeTab === 'armario'" (click)="toggleCreatePost()">
         ➕ Nueva Publicación
       </button>
@@ -61,7 +64,7 @@
 
       <div class="posts-grid" *ngIf="!loadingPosts && posts.length > 0">
         <div class="post-item" *ngFor="let post of posts">
-          <img [src]="post.foto" [alt]="post.descripcion || 'Prenda'">
+          <img [src]="post.foto" [alt]="post.descripcion || 'Prenda'" loading="lazy">
           
           <div class="post-overlay">
             <span class="stat">❤️ {{ post.likes_count || 0 }}</span>
@@ -94,7 +97,7 @@
 
           <div class="outfit-mosaic">
             <div class="outfit-slot" *ngFor="let slot of getOutfitSlots(outfit)">
-              <img *ngIf="slot" [src]="slot.foto" [alt]="slot.descripcion || 'Prenda'">
+              <img *ngIf="slot" [src]="slot.foto" [alt]="slot.descripcion || 'Prenda'" loading="lazy">
             </div>
           </div>
 
@@ -115,9 +118,13 @@
         <label for="outfit-name">Nombre del outfit (opcional)</label>
         <input id="outfit-name" type="text" [(ngModel)]="newOutfitName" placeholder="Ej: Look urbano de invierno">
 
-        <p class="selection-counter">Seleccionadas: {{ selectedPostIds.length }}/4</p>
+        <p class="selection-counter" *ngIf="!loadingPosts">Seleccionadas: {{ selectedPostIds.length }}/4</p>
+        <div class="loading-state" *ngIf="loadingPosts">Cargando prendas del armario...</div>
+        <div class="empty-state" *ngIf="!loadingPosts && posts.length === 0">
+          <p>No hay prendas todavía para crear outfits.</p>
+        </div>
 
-        <div class="select-posts-grid">
+        <div class="select-posts-grid" *ngIf="!loadingPosts && posts.length > 0">
           <button
             type="button"
             class="select-post-item"
@@ -125,14 +132,14 @@
             [class.selected]="isSelected(post.id)"
             (click)="togglePostSelection(post.id)"
           >
-            <img [src]="post.foto" [alt]="post.descripcion || 'Prenda'">
+            <img [src]="post.foto" [alt]="post.descripcion || 'Prenda'" loading="lazy">
           </button>
         </div>
       </div>
 
       <div class="modal-foot">
         <button class="cancel-btn" (click)="closeCreateOutfit()">Cancelar</button>
-        <button class="save-btn" [disabled]="selectedPostIds.length !== 4" (click)="createOutfit()">
+        <button class="save-btn" [disabled]="loadingPosts || selectedPostIds.length !== 4" (click)="createOutfit()">
           Guardar Outfit
         </button>
       </div>
@@ -180,6 +187,33 @@
       <div class="modal-foot">
         <button class="cancel-btn" (click)="toggleCreatePost()">Cancelar</button>
         <button class="save-btn" [disabled]="!newPostPhoto" (click)="createPost()">Publicar</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="create-outfit-modal" *ngIf="showGenerateOutfitIA">
+    <div class="create-outfit-content compact-modal">
+      <div class="modal-head">
+        <h3>Generar Outfit con IA</h3>
+        <button class="close-modal-btn" (click)="closeGenerateOutfitIA()">✕</button>
+      </div>
+
+      <div class="modal-body">
+        <label for="outfit-ia-prompt">Prompt de estilo</label>
+        <textarea
+          id="outfit-ia-prompt"
+          [(ngModel)]="outfitIAPrompt"
+          placeholder="Ej: cena de navidad elegante y abrigada"
+          rows="4"
+        ></textarea>
+        <p class="selection-counter">La IA elegirá 4 prendas de tu armario según el prompt.</p>
+      </div>
+
+      <div class="modal-foot">
+        <button class="cancel-btn" [disabled]="generatingOutfitIA" (click)="closeGenerateOutfitIA()">Cancelar</button>
+        <button class="save-btn" [disabled]="generatingOutfitIA || !outfitIAPrompt.trim()" (click)="generateOutfitWithIA()">
+          {{ generatingOutfitIA ? 'Generando...' : 'Generar Outfit' }}
+        </button>
       </div>
     </div>
   </div>

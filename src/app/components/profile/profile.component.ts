@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { User } from '../../models/user.model';
 import { NavbarComponent } from '../navbar/navbar.component';
@@ -9,7 +10,7 @@ import { NavbarComponent } from '../navbar/navbar.component';
 @Component({
   selector: 'app-profile',
   standalone: true,
-  imports: [CommonModule, NavbarComponent, HttpClientModule, FormsModule],
+  imports: [CommonModule, NavbarComponent, FormsModule],
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.css']
 })
@@ -26,11 +27,15 @@ export class ProfileComponent implements OnInit {
   loadingPosts = true;
   outfits: any[] = [];
   loadingOutfits = true;
+  hasLoadedOutfits = false;
   activeTab: 'armario' | 'outfits' = 'armario';
 
   showCreateOutfit = false;
   newOutfitName = '';
   selectedPostIds: number[] = [];
+  showGenerateOutfitIA = false;
+  outfitIAPrompt = '';
+  generatingOutfitIA = false;
 
   showCreatePost = false;
   newPostDescription = '';
@@ -42,7 +47,8 @@ export class ProfileComponent implements OnInit {
 
   constructor(
     private authService: AuthService,
-    private http: HttpClient 
+    private http: HttpClient,
+    private router: Router
   ) {
     const current = this.authService.currentUserValue;
     if (current) {
@@ -53,7 +59,6 @@ export class ProfileComponent implements OnInit {
   ngOnInit() {
     if (this.user.id) {
       this.loadPosts();
-      this.loadOutfits();
     }
   }
 
@@ -71,13 +76,16 @@ export class ProfileComponent implements OnInit {
   }
 
   loadOutfits() {
+    this.loadingOutfits = true;
     this.http.get(`${this.apiUrl}/users/${this.user.id}/outfits`).subscribe({
       next: (res: any) => {
         this.outfits = res.outfits || [];
         this.loadingOutfits = false;
+        this.hasLoadedOutfits = true;
       },
       error: (err) => {
         console.error('Error cargando outfits:', err);
+        this.handleAuthError(err);
         this.loadingOutfits = false;
       }
     });
@@ -85,6 +93,17 @@ export class ProfileComponent implements OnInit {
 
   setTab(tab: 'armario' | 'outfits') {
     this.activeTab = tab;
+    if (tab === 'outfits' && !this.hasLoadedOutfits) {
+      this.loadOutfits();
+    }
+  }
+
+  private handleAuthError(err: any): void {
+    if (err?.status === 401 || err?.status === 403) {
+      this.authService.logout();
+      alert('Sesion expirada. Inicia sesion nuevamente.');
+      this.router.navigate(['/login']);
+    }
   }
 
   deletePost(postId: number) {
@@ -98,6 +117,7 @@ export class ProfileComponent implements OnInit {
         },
         error: (err) => {
           console.error('Error al borrar el post:', err);
+          this.handleAuthError(err);
           alert('Hubo un error al borrar la publicación.');
         }
       });
@@ -133,7 +153,6 @@ export class ProfileComponent implements OnInit {
     }
 
     this.http.post(`${this.apiUrl}/posts`, {
-      usuario_id: this.user.id,
       descripcion: this.newPostDescription,
       descripcion_prenda: this.newGarmentDescription,
       foto: this.newPostPhoto
@@ -146,6 +165,7 @@ export class ProfileComponent implements OnInit {
       },
       error: (err) => {
         console.error('Error al crear post:', err);
+        this.handleAuthError(err);
         alert('Error al crear la publicación.');
       }
     });
@@ -161,6 +181,17 @@ export class ProfileComponent implements OnInit {
     this.showCreateOutfit = false;
     this.newOutfitName = '';
     this.selectedPostIds = [];
+  }
+
+  openGenerateOutfitIA() {
+    this.showGenerateOutfitIA = true;
+    this.outfitIAPrompt = '';
+  }
+
+  closeGenerateOutfitIA() {
+    this.showGenerateOutfitIA = false;
+    this.outfitIAPrompt = '';
+    this.generatingOutfitIA = false;
   }
 
   togglePostSelection(postId: number) {
@@ -189,7 +220,6 @@ export class ProfileComponent implements OnInit {
     }
 
     this.http.post(`${this.apiUrl}/outfits`, {
-      usuario_id: this.user.id,
       nombre: this.newOutfitName,
       post_ids: this.selectedPostIds
     }).subscribe({
@@ -202,7 +232,37 @@ export class ProfileComponent implements OnInit {
       },
       error: (err) => {
         console.error('Error al crear outfit:', err);
+        this.handleAuthError(err);
         alert('No se pudo crear el outfit.');
+      }
+    });
+  }
+
+  generateOutfitWithIA() {
+    if (!this.outfitIAPrompt.trim()) {
+      alert('Escribe un prompt para generar el outfit.');
+      return;
+    }
+
+    this.generatingOutfitIA = true;
+
+    this.http.post(`${this.apiUrl}/outfits/ia-generate`, {
+      prompt: this.outfitIAPrompt.trim()
+    }).subscribe({
+      next: (res: any) => {
+        if (res.success) {
+          this.closeGenerateOutfitIA();
+          this.loadOutfits();
+          this.activeTab = 'outfits';
+        }
+      },
+      error: (err) => {
+        console.error('Error generando outfit IA:', err);
+        this.handleAuthError(err);
+        alert(err?.error?.error || 'No se pudo generar el outfit con IA.');
+      },
+      complete: () => {
+        this.generatingOutfitIA = false;
       }
     });
   }
@@ -220,6 +280,7 @@ export class ProfileComponent implements OnInit {
       },
       error: (err) => {
         console.error('Error al borrar outfit:', err);
+        this.handleAuthError(err);
         alert('No se pudo borrar el outfit.');
       }
     });
