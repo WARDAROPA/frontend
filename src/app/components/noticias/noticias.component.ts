@@ -20,6 +20,7 @@ export class NoticiasComponent implements OnInit {
   currentUser: User | null = null;
   noticias: Noticia[] = [];
   filteredNoticias: Noticia[] = [];
+  loadingNoticias = true;
   activeFilter: 'todas' | 'n8n' | 'usuario' = 'todas';
 
   // Create news modal
@@ -56,6 +57,7 @@ export class NoticiasComponent implements OnInit {
   }
 
   loadNoticias(): void {
+    this.loadingNoticias = true;
     const userId = this.currentUser?.id;
     this.noticiaService.getNoticias(userId).subscribe({
       next: (response) => {
@@ -63,8 +65,12 @@ export class NoticiasComponent implements OnInit {
           this.noticias = response.noticias;
           this.applyFilter();
         }
+        this.loadingNoticias = false;
       },
-      error: (error) => console.error('Error al cargar noticias:', error)
+      error: (error) => {
+        console.error('Error al cargar noticias:', error);
+        this.loadingNoticias = false;
+      }
     });
   }
 

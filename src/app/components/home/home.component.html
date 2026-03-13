@@ -117,7 +117,11 @@
       </button>
     </div>
     
-    <div class="posts-grid">
+    <div class="loading-state" *ngIf="loadingPosts">
+      Cargando publicaciones...
+    </div>
+
+    <div class="posts-grid" *ngIf="!loadingPosts && posts.length > 0">
       <div class="post-card" *ngFor="let post of posts">
         <div class="post-header">
           <div class="post-user">
@@ -166,7 +170,7 @@
       </div>
     </div>
 
-    <div class="empty-state" *ngIf="posts.length === 0">
+    <div class="empty-state" *ngIf="!loadingPosts && posts.length === 0">
       <p>No hay publicaciones todavía</p>
       <p class="subtitle">¡Sé el primero en compartir tu outfit!</p>
     </div>

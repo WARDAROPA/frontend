@@ -258,6 +258,13 @@
   color: var(--text-secondary);
 }
 
+.loading-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--text-secondary);
+  font-weight: 600;
+}
+
 .empty-icon {
   font-size: 64px;
   margin-bottom: 16px;

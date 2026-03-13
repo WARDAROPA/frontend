@@ -35,7 +35,11 @@
   </div>
 
   <!-- News Grid -->
-  <div class="noticias-grid">
+  <div class="loading-state" *ngIf="loadingNoticias">
+    Cargando noticias...
+  </div>
+
+  <div class="noticias-grid" *ngIf="!loadingNoticias && filteredNoticias.length > 0">
     <div 
       class="noticia-card" 
       *ngFor="let noticia of filteredNoticias"
@@ -90,7 +94,7 @@
   </div>
 
   <!-- Empty State -->
-  <div class="empty-state" *ngIf="filteredNoticias.length === 0">
+  <div class="empty-state" *ngIf="!loadingNoticias && filteredNoticias.length === 0">
     <div class="empty-icon">📰</div>
     <p>No hay noticias todavía</p>
     <p class="subtitle">¡Sé el primero en compartir una noticia de moda!</p>

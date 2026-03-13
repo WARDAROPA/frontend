@@ -20,6 +20,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   currentUser: User | null = null;
   isConnected = false;
   posts: Post[] = [];
+  loadingPosts = true;
   
   showCreatePost = false;
   newPostDescription = '';
@@ -68,15 +69,18 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   loadPosts(): void {
+    this.loadingPosts = true;
     const userId = this.currentUser?.id;
     this.postService.getPosts(userId).subscribe({
       next: (response) => {
         if (response.success) {
           this.posts = response.posts;
         }
+        this.loadingPosts = false;
       },
       error: (error) => {
         console.error('Error al cargar posts:', error);
+        this.loadingPosts = false;
       }
     });
   }
