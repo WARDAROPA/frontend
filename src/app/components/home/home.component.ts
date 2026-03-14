@@ -21,6 +21,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   isConnected = false;
   posts: Post[] = [];
   loadingPosts = true;
+  likeLoadingByPost: Record<number, boolean> = {};
   
   showCreatePost = false;
   newPostDescription = '';
@@ -71,7 +72,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   loadPosts(): void {
     this.loadingPosts = true;
     const userId = this.currentUser?.id;
-    this.postService.getPosts(userId).subscribe({
+    this.postService.getPosts(userId, 12).subscribe({
       next: (response) => {
         if (response.success) {
           this.posts = response.posts;
@@ -87,29 +88,47 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   toggleLike(post: Post): void {
     if (!this.currentUser) return;
+    if (this.likeLoadingByPost[post.id]) return;
     
     const likeRequest = { usuario_id: this.currentUser.id };
+    const wasLiked = Boolean(post.user_liked);
+
+    this.likeLoadingByPost[post.id] = true;
+    post.user_liked = wasLiked ? 0 : 1;
+    post.likes_count = Math.max(0, Number(post.likes_count || 0) + (wasLiked ? -1 : 1));
     
-    if (post.user_liked) {
+    if (wasLiked) {
       this.postService.unlikePost(post.id, likeRequest).subscribe({
         next: (response) => {
-          if (response.success) {
-            this.loadPosts();
+          if (!response.success) {
+            post.user_liked = 1;
+            post.likes_count = Number(post.likes_count || 0) + 1;
           }
         },
         error: (error) => {
+          post.user_liked = 1;
+          post.likes_count = Number(post.likes_count || 0) + 1;
           console.error('Error al quitar like:', error);
+        },
+        complete: () => {
+          this.likeLoadingByPost[post.id] = false;
         }
       });
     } else {
       this.postService.likePost(post.id, likeRequest).subscribe({
         next: (response) => {
-          if (response.success) {
-            this.loadPosts();
+          if (!response.success) {
+            post.user_liked = 0;
+            post.likes_count = Math.max(0, Number(post.likes_count || 0) - 1);
           }
         },
         error: (error) => {
+          post.user_liked = 0;
+          post.likes_count = Math.max(0, Number(post.likes_count || 0) - 1);
           console.error('Error al dar like:', error);
+        },
+        complete: () => {
+          this.likeLoadingByPost[post.id] = false;
         }
       });
     }
@@ -215,7 +234,10 @@ export class HomeComponent implements OnInit, OnDestroy {
         if (response.success) {
           this.newComment = '';
           this.loadComments(this.selectedPost!.id);
-          this.loadPosts();
+          const targetPost = this.posts.find((post) => post.id === this.selectedPost!.id);
+          if (targetPost) {
+            targetPost.comments_count = Number(targetPost.comments_count || 0) + 1;
+          }
         }
       },
       error: (error) => {

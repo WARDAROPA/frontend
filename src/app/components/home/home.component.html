@@ -138,6 +138,7 @@
           <button 
             class="action-btn like" 
             [class.liked]="post.user_liked"
+            [disabled]="likeLoadingByPost[post.id]"
             (click)="toggleLike(post)"
           >
             {{ post.user_liked ? '❤️' : '🤍' }} {{ post.likes_count }}
