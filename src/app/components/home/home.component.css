@@ -188,6 +188,32 @@
   font-weight: 600;
 }
 
+.load-more-wrap {
+  display: flex;
+  justify-content: center;
+  padding: 28px 0 8px;
+}
+
+.load-more-btn {
+  border: 1px solid var(--border-color);
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  border-radius: var(--radius-md);
+  padding: 12px 20px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: var(--shadow-sm);
+}
+
+.load-more-btn:hover:not(:disabled) {
+  background: var(--bg-tertiary);
+}
+
+.load-more-btn:disabled {
+  cursor: wait;
+  opacity: 0.7;
+}
+
 .empty-state p {
   font-size: 18px;
   margin-bottom: 10px;

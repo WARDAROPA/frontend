@@ -11,12 +11,12 @@ export class PostService {
 
   constructor(private http: HttpClient) {}
 
-  getPosts(usuarioId?: number, limit: number = 12): Observable<{ success: boolean; posts: Post[] }> {
-    const params: any = { limit: limit.toString() };
+  getPosts(usuarioId?: number, limit: number = 12, offset: number = 0): Observable<{ success: boolean; posts: Post[]; hasMore: boolean }> {
+    const params: any = { limit: limit.toString(), offset: offset.toString() };
     if (usuarioId) {
       params.usuario_id = usuarioId.toString();
     }
-    return this.http.get<{ success: boolean; posts: Post[] }>(`${this.apiUrl}/posts`, params ? { params } : {});
+    return this.http.get<{ success: boolean; posts: Post[]; hasMore: boolean }>(`${this.apiUrl}/posts`, params ? { params } : {});
   }
 
   createPost(post: CreatePostRequest): Observable<{ success: boolean; message: string; postId: number }> {

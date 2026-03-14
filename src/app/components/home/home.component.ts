@@ -21,7 +21,11 @@ export class HomeComponent implements OnInit, OnDestroy {
   isConnected = false;
   posts: Post[] = [];
   loadingPosts = true;
+  loadingMorePosts = false;
+  hasMorePosts = true;
   likeLoadingByPost: Record<number, boolean> = {};
+  private readonly pageSize = 12;
+  private currentOffset = 0;
   
   showCreatePost = false;
   newPostDescription = '';
@@ -62,28 +66,49 @@ export class HomeComponent implements OnInit, OnDestroy {
       console.log('Mensaje recibido:', message);
     });
 
-    this.loadPosts();
+    this.loadPosts(true);
   }
 
   ngOnDestroy(): void {
     this.wsService.disconnect();
   }
 
-  loadPosts(): void {
-    this.loadingPosts = true;
+  loadPosts(reset: boolean = false): void {
     const userId = this.currentUser?.id;
-    this.postService.getPosts(userId, 12).subscribe({
+    const offset = reset ? 0 : this.currentOffset;
+
+    if (reset) {
+      this.loadingPosts = true;
+    } else {
+      this.loadingMorePosts = true;
+    }
+
+    this.postService.getPosts(userId, this.pageSize, offset).subscribe({
       next: (response) => {
         if (response.success) {
-          this.posts = response.posts;
+          this.posts = reset
+            ? response.posts
+            : [...this.posts, ...response.posts];
+          this.currentOffset = this.posts.length;
+          this.hasMorePosts = response.hasMore;
         }
         this.loadingPosts = false;
+        this.loadingMorePosts = false;
       },
       error: (error) => {
         console.error('Error al cargar posts:', error);
         this.loadingPosts = false;
+        this.loadingMorePosts = false;
       }
     });
+  }
+
+  loadMorePosts(): void {
+    if (this.loadingPosts || this.loadingMorePosts || !this.hasMorePosts) {
+      return;
+    }
+
+    this.loadPosts(false);
   }
 
   toggleLike(post: Post): void {
@@ -185,7 +210,7 @@ export class HomeComponent implements OnInit, OnDestroy {
           }
 
           this.toggleCreatePost();
-          this.loadPosts();
+          this.loadPosts(true);
         }
       },
       error: (error) => {
@@ -289,7 +314,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.postService.deletePost(post.id).subscribe({
       next: (response) => {
         if (response.success) {
-          this.loadPosts();
+          this.loadPosts(true);
         }
       },
       error: (error) => {

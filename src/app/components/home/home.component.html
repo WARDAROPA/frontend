@@ -131,7 +131,7 @@
         </div>
         
         <div class="post-image">
-          <img [src]="post.foto" [alt]="post.descripcion" />
+          <img [src]="post.foto" [alt]="post.descripcion" loading="lazy" />
         </div>
         
         <div class="post-actions">
@@ -169,6 +169,12 @@
           <p class="match-description">{{ matchResult.descripcion }}</p>
         </div>
       </div>
+    </div>
+
+    <div class="load-more-wrap" *ngIf="!loadingPosts && posts.length > 0 && hasMorePosts">
+      <button class="load-more-btn" [disabled]="loadingMorePosts" (click)="loadMorePosts()">
+        {{ loadingMorePosts ? 'Cargando más publicaciones...' : 'Cargar más publicaciones' }}
+      </button>
     </div>
 
     <div class="empty-state" *ngIf="!loadingPosts && posts.length === 0">
