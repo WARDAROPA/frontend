@@ -203,6 +203,22 @@
   color: var(--text-tertiary);
 }
 
+.try-on-btn {
+  margin-top: 10px;
+  width: 100%;
+  border: none;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #0ea5e9, #2563eb);
+  color: #fff;
+  font-weight: 700;
+  padding: 10px 12px;
+  cursor: pointer;
+}
+
+.try-on-btn:hover {
+  filter: brightness(1.05);
+}
+
 .post-item {
   position: relative;
   aspect-ratio: 1 / 1;
@@ -476,4 +492,17 @@
   font-family: inherit;
   font-size: 14px;
   resize: vertical;
+}
+
+.tryon-result {
+  margin-top: 12px;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+  background: var(--bg-secondary);
+}
+
+.tryon-result img {
+  width: 100%;
+  display: block;
 }

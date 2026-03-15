@@ -36,6 +36,13 @@ export class ProfileComponent implements OnInit {
   showGenerateOutfitIA = false;
   outfitIAPrompt = '';
   generatingOutfitIA = false;
+  showTryOnOutfit = false;
+  tryingOnOutfit = false;
+  selectedOutfitForTryOn: any | null = null;
+  tryOnPhoto = '';
+  tryOnFileName = '';
+  tryOnResultImage = '';
+  tryOnResultDescription = '';
 
   showCreatePost = false;
   newPostDescription = '';
@@ -218,6 +225,70 @@ export class ProfileComponent implements OnInit {
     this.showGenerateOutfitIA = false;
     this.outfitIAPrompt = '';
     this.generatingOutfitIA = false;
+  }
+
+  openTryOnOutfit(outfit: any) {
+    this.showTryOnOutfit = true;
+    this.selectedOutfitForTryOn = outfit;
+    this.tryOnPhoto = '';
+    this.tryOnFileName = '';
+    this.tryOnResultImage = '';
+    this.tryOnResultDescription = '';
+  }
+
+  closeTryOnOutfit() {
+    this.showTryOnOutfit = false;
+    this.tryingOnOutfit = false;
+    this.selectedOutfitForTryOn = null;
+    this.tryOnPhoto = '';
+    this.tryOnFileName = '';
+    this.tryOnResultImage = '';
+    this.tryOnResultDescription = '';
+  }
+
+  onTryOnPhotoSelected(event: any) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    this.tryOnFileName = file.name;
+    const reader = new FileReader();
+    reader.onload = () => {
+      this.tryOnPhoto = reader.result as string;
+    };
+    reader.readAsDataURL(file);
+  }
+
+  generateTryOn() {
+    if (!this.selectedOutfitForTryOn) {
+      alert('Selecciona un outfit para probar.');
+      return;
+    }
+
+    if (!this.tryOnPhoto) {
+      alert('Debes subir una foto de cuerpo entero.');
+      return;
+    }
+
+    this.tryingOnOutfit = true;
+
+    this.http.post(`${this.apiUrl}/outfits/${this.selectedOutfitForTryOn.id}/try-on`, {
+      foto_usuario: this.tryOnPhoto
+    }).subscribe({
+      next: (res: any) => {
+        if (res.success) {
+          this.tryOnResultImage = res.imagen_resultado;
+          this.tryOnResultDescription = res.descripcion || '';
+        }
+      },
+      error: (err) => {
+        console.error('Error al probar outfit:', err);
+        this.handleAuthError(err);
+        alert(err?.error?.error || 'No se pudo generar la prueba de outfit.');
+      },
+      complete: () => {
+        this.tryingOnOutfit = false;
+      }
+    });
   }
 
   togglePostSelection(postId: number) {

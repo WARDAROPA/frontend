@@ -101,6 +101,8 @@
             </div>
           </div>
 
+          <button class="try-on-btn" (click)="openTryOnOutfit(outfit)">🪞 Probar outfit</button>
+
           <p class="outfit-date">{{ outfit.created_at | date:'short' }}</p>
         </div>
       </div>
@@ -213,6 +215,47 @@
         <button class="cancel-btn" [disabled]="generatingOutfitIA" (click)="closeGenerateOutfitIA()">Cancelar</button>
         <button class="save-btn" [disabled]="generatingOutfitIA || !outfitIAPrompt.trim()" (click)="generateOutfitWithIA()">
           {{ generatingOutfitIA ? 'Generando...' : 'Generar Outfit' }}
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="create-outfit-modal" *ngIf="showTryOnOutfit">
+    <div class="create-outfit-content compact-modal">
+      <div class="modal-head">
+        <h3>Probar Outfit con IA</h3>
+        <button class="close-modal-btn" (click)="closeTryOnOutfit()">✕</button>
+      </div>
+
+      <div class="modal-body">
+        <p class="selection-counter" *ngIf="selectedOutfitForTryOn">
+          Outfit: {{ selectedOutfitForTryOn.nombre || 'Outfit sin nombre' }}
+        </p>
+
+        <label for="tryon-photo">Sube una foto tuya de cuerpo entero</label>
+        <input
+          type="file"
+          id="tryon-photo"
+          accept="image/*"
+          (change)="onTryOnPhotoSelected($event)"
+          class="file-input"
+        />
+        <div class="file-name" *ngIf="tryOnFileName">{{ tryOnFileName }}</div>
+
+        <div class="preview" *ngIf="tryOnPhoto && !tryOnResultImage">
+          <img [src]="tryOnPhoto" alt="Foto subida" />
+        </div>
+
+        <div class="tryon-result" *ngIf="tryOnResultImage">
+          <img [src]="tryOnResultImage" alt="Resultado de prueba de outfit" />
+          <p class="selection-counter" *ngIf="tryOnResultDescription">{{ tryOnResultDescription }}</p>
+        </div>
+      </div>
+
+      <div class="modal-foot">
+        <button class="cancel-btn" [disabled]="tryingOnOutfit" (click)="closeTryOnOutfit()">Cerrar</button>
+        <button class="save-btn" [disabled]="tryingOnOutfit || !tryOnPhoto" (click)="generateTryOn()">
+          {{ tryingOnOutfit ? 'Generando prueba...' : 'Generar prueba' }}
         </button>
       </div>
     </div>
