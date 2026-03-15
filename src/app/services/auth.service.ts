@@ -19,15 +19,25 @@ export class AuthService {
   private restoreSession(): void {
     const token = localStorage.getItem('authToken');
     const savedUser = localStorage.getItem('currentUser');
+    
     if (token && savedUser) {
       if (this.isTokenExpired(token)) {
-        this.logout();
+        this.clearSession();
         return;
       }
-      this.currentUserSubject.next(JSON.parse(savedUser));
-    } else {
-      this.logout();
+      try {
+        this.currentUserSubject.next(JSON.parse(savedUser));
+      } catch (error) {
+        console.error('Error parsing saved user:', error);
+        this.clearSession();
+      }
     }
+  }
+
+  private clearSession(): void {
+    this.currentUserSubject.next(null);
+    localStorage.removeItem('currentUser');
+    localStorage.removeItem('authToken');
   }
 
   private isTokenExpired(token: string): boolean {
@@ -57,9 +67,7 @@ export class AuthService {
   }
 
   logout(): void {
-    this.currentUserSubject.next(null);
-    localStorage.removeItem('currentUser');
-    localStorage.removeItem('authToken');
+    this.clearSession();
   }
 
   get currentUserValue(): User | null {

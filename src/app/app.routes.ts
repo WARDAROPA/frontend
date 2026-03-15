@@ -4,13 +4,14 @@ import { RegisterComponent } from './components/register/register.component';
 import { HomeComponent } from './components/home/home.component';
 import { ProfileComponent } from './components/profile/profile.component';
 import { NoticiasComponent } from './components/noticias/noticias.component';
+import { authGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
-  { path: 'home', component: HomeComponent },
-  { path: 'noticias', component: NoticiasComponent },
-  { path: 'profile', component: ProfileComponent },
+  { path: 'home', component: HomeComponent, canActivate: [authGuard] },
+  { path: 'noticias', component: NoticiasComponent, canActivate: [authGuard] },
+  { path: 'profile', component: ProfileComponent, canActivate: [authGuard] },
   { path: '**', redirectTo: '/login' }
 ];

@@ -68,6 +68,12 @@ export class PostService {
     );
   }
 
+  getPostPhoto(postId: number): Observable<{ success: boolean; foto: string }> {
+    return this.http.get<{ success: boolean; foto: string }>(
+      `${this.apiUrl}/posts/${postId}/photo`
+    );
+  }
+
   deletePost(postId: number): Observable<{ success: boolean; message: string }> {
     return this.http.delete<{ success: boolean; message: string }>(
       `${this.apiUrl}/posts/${postId}`

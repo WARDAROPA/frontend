@@ -16,18 +16,21 @@
   <div class="filters-bar">
     <button 
       class="filter-btn" 
+      type="button"
       [class.active]="activeFilter === 'todas'"
       (click)="setFilter('todas')">
       🌐 Todas
     </button>
     <button 
       class="filter-btn" 
+      type="button"
       [class.active]="activeFilter === 'n8n'"
       (click)="setFilter('n8n')">
       🤖 Automáticas
     </button>
     <button 
       class="filter-btn" 
+      type="button"
       [class.active]="activeFilter === 'usuario'"
       (click)="setFilter('usuario')">
       👤 Comunidad
@@ -75,15 +78,18 @@
         <div class="noticia-actions">
           <button 
             class="action-btn" 
+            type="button"
             [class.liked]="noticia.user_liked"
+            [disabled]="likeLoadingByNoticia[noticia.id]"
             (click)="toggleLike(noticia, $event)">
             {{ noticia.user_liked ? '❤️' : '🤍' }} {{ noticia.likes_count }}
           </button>
-          <button class="action-btn">
+          <button class="action-btn" type="button">
             💬 {{ noticia.comments_count }}
           </button>
           <button 
             class="action-btn delete" 
+            type="button"
             *ngIf="noticia.usuario_id === currentUser?.id"
             (click)="deleteNoticia(noticia, $event)">
             🗑️
@@ -184,7 +190,9 @@
         <div class="detail-actions">
           <button 
             class="action-btn-lg" 
+            type="button"
             [class.liked]="detailNoticia?.user_liked"
+            [disabled]="detailNoticia ? likeLoadingByNoticia[detailNoticia.id] : false"
             (click)="toggleLike(detailNoticia!)">
             {{ detailNoticia?.user_liked ? '❤️' : '🤍' }} {{ detailNoticia?.likes_count }} Me gusta
           </button>

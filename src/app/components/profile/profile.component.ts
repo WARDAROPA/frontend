@@ -66,6 +66,18 @@ export class ProfileComponent implements OnInit {
     this.http.get(`${this.apiUrl}/users/${this.user.id}/posts`).subscribe({
       next: (res: any) => {
         this.posts = res.posts || [];
+        
+        this.posts.forEach(post => {
+          this.http.get(`${this.apiUrl}/posts/${post.id}/photo`).subscribe({
+            next: (photoRes: any) => {
+              if (photoRes.success) {
+                post.foto = photoRes.foto;
+              }
+            },
+            error: (err) => console.error(`Error cargando foto ${post.id}:`, err)
+          });
+        });
+        
         this.loadingPosts = false;
       },
       error: (err) => {
@@ -80,6 +92,20 @@ export class ProfileComponent implements OnInit {
     this.http.get(`${this.apiUrl}/users/${this.user.id}/outfits`).subscribe({
       next: (res: any) => {
         this.outfits = res.outfits || [];
+        
+        this.outfits.forEach(outfit => {
+          outfit.prendas.forEach((prenda: any) => {
+            this.http.get(`${this.apiUrl}/posts/${prenda.post_id}/photo`).subscribe({
+              next: (photoRes: any) => {
+                if (photoRes.success) {
+                  prenda.foto = photoRes.foto;
+                }
+              },
+              error: (err) => console.error(`Error cargando foto ${prenda.post_id}:`, err)
+            });
+          });
+        });
+        
         this.loadingOutfits = false;
         this.hasLoadedOutfits = true;
       },

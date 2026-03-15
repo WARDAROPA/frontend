@@ -21,6 +21,7 @@ export class NoticiasComponent implements OnInit {
   noticias: Noticia[] = [];
   filteredNoticias: Noticia[] = [];
   loadingNoticias = true;
+  likeLoadingByNoticia: Record<number, boolean> = {};
   activeFilter: 'todas' | 'n8n' | 'usuario' = 'todas';
 
   // Create news modal
@@ -182,16 +183,47 @@ export class NoticiasComponent implements OnInit {
   toggleLike(noticia: Noticia, event?: Event): void {
     if (event) event.stopPropagation();
     if (!this.currentUser) return;
+    if (this.likeLoadingByNoticia[noticia.id]) return;
 
-    if (noticia.user_liked) {
+    const wasLiked = Boolean(noticia.user_liked);
+    this.likeLoadingByNoticia[noticia.id] = true;
+    noticia.user_liked = wasLiked ? 0 : 1;
+    noticia.likes_count = Math.max(0, Number(noticia.likes_count || 0) + (wasLiked ? -1 : 1));
+
+    if (this.detailNoticia?.id === noticia.id) {
+      this.detailNoticia.user_liked = noticia.user_liked;
+      this.detailNoticia.likes_count = noticia.likes_count;
+    }
+
+    if (wasLiked) {
       this.noticiaService.unlikeNoticia(noticia.id, this.currentUser.id).subscribe({
-        next: () => this.loadNoticias(),
-        error: (error) => console.error('Error al quitar like:', error)
+        error: (error) => {
+          noticia.user_liked = 1;
+          noticia.likes_count = Number(noticia.likes_count || 0) + 1;
+          if (this.detailNoticia?.id === noticia.id) {
+            this.detailNoticia.user_liked = noticia.user_liked;
+            this.detailNoticia.likes_count = noticia.likes_count;
+          }
+          console.error('Error al quitar like:', error);
+        },
+        complete: () => {
+          this.likeLoadingByNoticia[noticia.id] = false;
+        }
       });
     } else {
       this.noticiaService.likeNoticia(noticia.id, this.currentUser.id).subscribe({
-        next: () => this.loadNoticias(),
-        error: (error) => console.error('Error al dar like:', error)
+        error: (error) => {
+          noticia.user_liked = 0;
+          noticia.likes_count = Math.max(0, Number(noticia.likes_count || 0) - 1);
+          if (this.detailNoticia?.id === noticia.id) {
+            this.detailNoticia.user_liked = noticia.user_liked;
+            this.detailNoticia.likes_count = noticia.likes_count;
+          }
+          console.error('Error al dar like:', error);
+        },
+        complete: () => {
+          this.likeLoadingByNoticia[noticia.id] = false;
+        }
       });
     }
   }

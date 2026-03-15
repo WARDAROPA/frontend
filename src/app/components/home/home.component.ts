@@ -86,9 +86,22 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.postService.getPosts(userId, this.pageSize, offset).subscribe({
       next: (response) => {
         if (response.success) {
+          const newPosts = response.posts;
+          
+          newPosts.forEach(post => {
+            this.postService.getPostPhoto(post.id).subscribe({
+              next: (photoResponse) => {
+                if (photoResponse.success) {
+                  post.foto = photoResponse.foto;
+                }
+              },
+              error: (err) => console.error(`Error cargando foto del post ${post.id}:`, err)
+            });
+          });
+
           this.posts = reset
-            ? response.posts
-            : [...this.posts, ...response.posts];
+            ? newPosts
+            : [...this.posts, ...newPosts];
           this.currentOffset = this.posts.length;
           this.hasMorePosts = response.hasMore;
         }
