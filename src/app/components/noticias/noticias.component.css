@@ -213,7 +213,7 @@
 .noticia-author {
   font-size: 13px;
   font-weight: 600;
-  color: var(--primary-color);
+  color: var(--text-primary);
 }
 
 .noticia-time {
@@ -503,7 +503,7 @@
 .detail-author {
   font-weight: 600;
   font-size: 14px;
-  color: var(--primary-color);
+  color: var(--text-primary);
 }
 
 .detail-time {
