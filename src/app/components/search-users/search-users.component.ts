@@ -55,6 +55,7 @@ export class SearchUsersComponent implements OnInit {
     this.loading = true;
     this.userService.searchUsers(this.searchQuery).subscribe({
       next: (response) => {
+        console.log('Respuesta de búsqueda:', response);
         if (response.success) {
           this.users = response.users
             .filter(user => user.id !== this.currentUser?.id)
@@ -62,6 +63,7 @@ export class SearchUsersComponent implements OnInit {
               ...user,
               isFollowing: this.followingIds.has(user.id)
             }));
+          console.log('Usuarios filtrados:', this.users.length);
         }
         this.loading = false;
       },

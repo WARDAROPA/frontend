@@ -12,6 +12,7 @@ export class UserService {
   constructor(private http: HttpClient) {}
 
   searchUsers(query: string): Observable<{ success: boolean; users: User[] }> {
+    console.log('Buscando usuarios con query:', query);
     const params = new HttpParams().set('q', query);
     return this.http.get<{ success: boolean; users: User[] }>(`${this.apiUrl}/users/search`, { params });
   }
