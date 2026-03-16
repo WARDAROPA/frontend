@@ -68,31 +68,35 @@ export class ProfileComponent implements OnInit {
   }
 
   ngOnInit() {
-    const id = this.route.snapshot.paramMap.get('id');
-    const currentUser = this.authService.currentUserValue;
-    if (id) {
-      const userId = +id;
-      this.isOwnProfile = currentUser?.id === userId;
-      this.userService.getUserById(userId).subscribe({
-        next: (res: any) => {
-          if (res.success) {
-            this.user = res.user;
-            this.loadPosts();
+    // Recalculate when the route param changes (e.g. navegar entre perfiles)
+    this.route.paramMap.subscribe((paramMap) => {
+      const id = paramMap.get('id');
+      const currentUser = this.authService.currentUserValue;
+
+      if (id) {
+        const userId = +id;
+        this.isOwnProfile = currentUser?.id === userId;
+        this.userService.getUserById(userId).subscribe({
+          next: (res: any) => {
+            if (res.success) {
+              this.user = res.user;
+              this.loadPosts();
+            }
+          },
+          error: (err) => {
+            console.error('Error cargando perfil:', err);
+            this.router.navigate(['/home']);
           }
-        },
-        error: (err) => {
-          console.error('Error cargando perfil:', err);
-          this.router.navigate(['/home']);
+        });
+      } else {
+        // Perfil propio
+        this.isOwnProfile = true;
+        if (currentUser) {
+          this.user = currentUser;
+          this.loadPosts();
         }
-      });
-    } else {
-      // Perfil propio
-      this.isOwnProfile = true;
-      if (currentUser) {
-        this.user = currentUser;
-        this.loadPosts();
       }
-    }
+    });
   }
 
   loadPosts() {
