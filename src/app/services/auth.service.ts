@@ -70,6 +70,11 @@ export class AuthService {
     this.clearSession();
   }
 
+  updateCurrentUser(user: User): void {
+    localStorage.setItem('currentUser', JSON.stringify(user));
+    this.currentUserSubject.next(user);
+  }
+
   get currentUserValue(): User | null {
     return this.currentUserSubject.value;
   }

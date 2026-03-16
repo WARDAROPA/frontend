@@ -19,6 +19,10 @@
 
   <div class="users-list">
     <div *ngFor="let user of users" class="user-card">
+      <div class="user-avatar">
+        <img *ngIf="user.avatar" [src]="user.avatar" alt="Avatar" />
+        <span *ngIf="!user.avatar">{{ user.username[0].toUpperCase() }}</span>
+      </div>
       <div class="user-info">
         <h3>{{ user.username }}</h3>
         <p>{{ user.email }}</p>

@@ -34,6 +34,9 @@ export class ProfileComponent implements OnInit {
   isFollowing = false;
   followLoading = false;
 
+  avatarPreview = '';
+  avatarUploading = false;
+
   showCreateOutfit = false;
   newOutfitName = '';
   selectedPostIds: number[] = [];

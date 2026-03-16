@@ -36,4 +36,8 @@ export class UserService {
   getUserById(id: number): Observable<{ success: boolean; user: User }> {
     return this.http.get<{ success: boolean; user: User }>(`${this.apiUrl}/users/${id}`);
   }
+
+  updateProfile(data: { avatar?: string; bio?: string }): Observable<{ success: boolean; user: User }> {
+    return this.http.put<{ success: boolean; user: User }>(`${this.apiUrl}/users/me`, data);
+  }
 }

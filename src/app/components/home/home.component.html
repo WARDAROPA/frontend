@@ -154,7 +154,10 @@
       <div class="post-card" *ngFor="let post of posts">
         <div class="post-header">
           <div class="post-user">
-            <div class="user-avatar">{{ post.username[0].toUpperCase() }}</div>
+            <div class="user-avatar">
+              <img *ngIf="post.user_avatar" [src]="post.user_avatar" alt="Avatar" />
+              <span *ngIf="!post.user_avatar">{{ post.username[0].toUpperCase() }}</span>
+            </div>
             <span class="username">{{ post.username }}</span>
           </div>
         </div>
