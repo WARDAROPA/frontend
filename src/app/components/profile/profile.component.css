@@ -73,6 +73,28 @@
   color: var(--text-primary);
 }
 
+.follow-btn {
+  margin-top: 12px;
+  align-self: flex-start;
+  padding: 10px 16px;
+  border: none;
+  border-radius: var(--radius-lg);
+  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+  color: #fff;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.15s ease, opacity 0.15s ease;
+}
+
+.follow-btn:hover {
+  transform: translateY(-1px);
+}
+
+.follow-btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
 .profile-bio {
   margin-top: 8px;
   color: var(--text-primary);
