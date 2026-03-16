@@ -580,3 +580,32 @@
 .add-comment .btn-publish {
   align-self: flex-end;
 }
+
+.comment-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.user-info-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.delete-comment-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  opacity: 0.5;
+  transition: opacity 0.2s, transform 0.2s;
+  padding: 4px;
+}
+
+.delete-comment-btn:hover {
+  opacity: 1;
+  transform: scale(1.1);
+  color: red;
+}

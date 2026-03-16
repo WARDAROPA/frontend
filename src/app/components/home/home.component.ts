@@ -336,4 +336,30 @@ export class HomeComponent implements OnInit, OnDestroy {
       }
     });
   }
+
+  deleteComment(commentId: number): void {
+    if (!confirm('¿Seguro que quieres borrar este comentario?')) {
+      return;
+    }
+
+    this.postService.deleteComment(commentId).subscribe({
+      next: (response: any) => {
+        if (response.success) {
+          // Quitamos el comentario de la lista
+          this.comments = this.comments.filter(c => c.id !== commentId);
+          
+          // Actualizamos el contador visual en el post
+          if (this.selectedPost && this.selectedPost.comments_count > 0) {
+            this.selectedPost.comments_count--;
+            // Opcional: recargar todos los posts para asegurar sincronización
+            // this.loadPosts(); 
+          }
+        }
+      },
+      error: (error: any) => {
+        console.error('Error al borrar el comentario:', error);
+        alert('No se pudo borrar el comentario.');
+      }
+    });
+  }
 }

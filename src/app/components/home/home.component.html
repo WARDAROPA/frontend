@@ -85,8 +85,19 @@
         <div class="comments-list">
           <div class="comment" *ngFor="let comment of comments">
             <div class="comment-header">
-              <div class="user-avatar small">{{ comment.username[0].toUpperCase() }}</div>
-              <strong>{{ comment.username }}</strong>
+              <div class="user-info-wrapper">
+                <div class="user-avatar small">{{ comment.username[0].toUpperCase() }}</div>
+                <strong>{{ comment.username }}</strong>
+              </div>
+              
+              <button 
+                class="delete-comment-btn"
+                *ngIf="currentUser && (comment.usuario_id === currentUser.id || selectedPost?.usuario_id === currentUser.id)"
+                (click)="deleteComment(comment.id)"
+                title="Borrar comentario"
+              >
+                🗑️
+              </button>
             </div>
             <p class="comment-text">{{ comment.texto }}</p>
           </div>
