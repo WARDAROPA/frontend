@@ -1,0 +1,36 @@
+<div class="search-users-container">
+  <app-navbar></app-navbar>
+
+  <div class="search-section">
+    <h2>Buscar Usuarios</h2>
+    <div class="search-input-container">
+      <input
+        type="text"
+        [(ngModel)]="searchQuery"
+        (input)="searchUsers()"
+        placeholder="Buscar por nombre de usuario o email..."
+        class="search-input"
+      />
+      <button *ngIf="loading" class="loading-btn" disabled>
+        <span class="spinner"></span>
+      </button>
+    </div>
+  </div>
+
+  <div class="users-list">
+    <div *ngFor="let user of users" class="user-card">
+      <div class="user-info">
+        <h3>{{ user.username }}</h3>
+        <p>{{ user.email }}</p>
+      </div>
+      <div class="user-actions">
+        <button (click)="viewProfile(user)" class="btn btn-secondary">Ver Perfil</button>
+        <button *ngIf="!user.isFollowing" (click)="followUser(user)" class="btn btn-primary">Seguir</button>
+        <button *ngIf="user.isFollowing" (click)="unfollowUser(user)" class="btn btn-outline">Dejar de Seguir</button>
+      </div>
+    </div>
+    <div *ngIf="users.length === 0 && searchQuery && !loading" class="no-results">
+      No se encontraron usuarios.
+    </div>
+  </div>
+</div>
