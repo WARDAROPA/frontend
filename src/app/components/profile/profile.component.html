@@ -70,7 +70,7 @@
             <span class="stat">❤️ {{ post.likes_count || 0 }}</span>
             <span class="stat">💬 {{ post.comments_count || 0 }}</span>
           </div>
-          <button class="delete-btn" (click)="deletePost(post.id)" title="Borrar prenda">
+          <button *ngIf="isOwnProfile" class="delete-btn" (click)="deletePost(post.id)" title="Borrar prenda">
               🗑️
             </button>
         </div>
@@ -92,7 +92,7 @@
         <div class="outfit-card" *ngFor="let outfit of outfits">
           <div class="outfit-top">
             <h4>{{ outfit.nombre || 'Outfit sin nombre' }}</h4>
-            <button class="delete-outfit-btn" (click)="deleteOutfit(outfit.id)">🗑️</button>
+            <button *ngIf="isOwnProfile" class="delete-outfit-btn" (click)="deleteOutfit(outfit.id)">🗑️</button>
           </div>
 
           <div class="outfit-mosaic">
