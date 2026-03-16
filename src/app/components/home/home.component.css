@@ -164,21 +164,22 @@
   margin: 0 20px 16px;
   padding: 12px;
   border-radius: var(--radius-md);
-  background: rgba(16, 185, 129, 0.08);
-  border: 1px solid rgba(16, 185, 129, 0.2);
+  background: linear-gradient(135deg, #065f46 0%, #047857 100%);
+  border: 1px solid rgba(255, 255, 255, 0.25);
 }
 
 .match-score {
   margin: 0 0 6px;
-  color: #065f46;
+  color: #ffffff;
   font-size: 14px;
 }
 
 .match-description {
   margin: 0;
-  color: #14532d;
+  color: #ffffff;
   font-size: 13px;
   line-height: 1.5;
+  opacity: 0.95;
 }
 
 .empty-state {

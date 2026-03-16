@@ -446,8 +446,9 @@
 }
 
 .select-post-item.selected {
-  border-color: var(--primary-color);
-  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+  border-color: #ffffff;
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.65), 0 0 0 6px rgba(56, 189, 248, 0.55);
+  transform: translateY(-1px);
 }
 
 .select-post-item img {
