@@ -31,7 +31,7 @@
 
 .btn-create {
   padding: 12px 24px;
-  background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+  background: var(--accent-color);
   color: white;
   border: none;
   border-radius: var(--radius-lg);
@@ -68,13 +68,13 @@
 }
 
 .filter-btn:hover {
-  border-color: var(--primary-color);
-  color: var(--primary-color);
-  background: rgba(99, 102, 241, 0.05);
+  border-color: var(--accent-color);
+  color: var(--accent-color);
+  background: rgba(14, 165, 233, 0.08);
 }
 
 .filter-btn.active {
-  background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+  background: var(--accent-color);
   color: white;
   border-color: transparent;
 }
@@ -455,7 +455,7 @@
 
 .btn-publish {
   padding: 10px 24px;
-  background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+  background: var(--accent-color);
   color: white;
   border: none;
   border-radius: var(--radius-md);
@@ -617,7 +617,7 @@
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+  background: var(--secondary-color);
   color: white;
   display: flex;
   align-items: center;

@@ -4,7 +4,7 @@
   align-items: center;
   justify-content: center;
   padding: 24px;
-  background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+  background: var(--bg-primary);
 }
 
 .auth-card {
@@ -101,7 +101,7 @@ input:focus {
 button {
   width: 100%;
   padding: 14px;
-  background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+  background: var(--accent-color);
   color: white;
   border: none;
   border-radius: var(--radius-md);

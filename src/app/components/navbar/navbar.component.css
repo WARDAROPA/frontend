@@ -42,10 +42,7 @@
   font-size: 22px;
   font-weight: 700;
   letter-spacing: -0.5px;
-  background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: var(--text-primary);
 }
 
 .nav-actions {
@@ -76,7 +73,7 @@
 }
 
 .nav-link.active {
-  background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+  background: var(--accent-color);
   color: white;
   font-weight: 600;
 }
@@ -100,7 +97,7 @@
 
 .btn-logout {
   padding: 10px 20px;
-  background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+  background: var(--accent-color);
   color: white;
   border: none;
   border-radius: var(--radius-md);

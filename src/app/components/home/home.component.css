@@ -73,7 +73,7 @@
   width: 44px;
   height: 44px;
   border-radius: 50%;
-  background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+  background: var(--secondary-color);
   color: white;
   display: flex;
   align-items: center;
@@ -249,8 +249,7 @@
 }
 
 .toggle-btn.active {
-  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-  color: #fff;
+  background: var(--accent-color);
   border-color: transparent;
 }
 
@@ -267,7 +266,7 @@
 }
 
 .header-new-post-btn {
-  background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+  background: var(--accent-color);
   color: white;
   border: none;
   border-radius: var(--radius-md);
@@ -302,7 +301,7 @@
   position: fixed;
   bottom: 32px;
   right: 32px;
-  background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+  background: var(--accent-color);
   color: white;
   border: none;
   border-radius: 16px;
@@ -310,7 +309,7 @@
   font-size: 15px;
   font-weight: 600;
   cursor: pointer;
-  box-shadow: var(--shadow-lg), 0 0 0 0 rgba(99, 102, 241, 0.5);
+  box-shadow: var(--shadow-lg);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   z-index: 1000;
   display: flex;
@@ -511,14 +510,14 @@
 }
 
 .btn-publish {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: var(--accent-color);
   color: white;
-  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+  box-shadow: 0 4px 15px rgba(14, 165, 233, 0.25);
 }
 
 .btn-publish:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
+  box-shadow: 0 6px 20px rgba(14, 165, 233, 0.35);
 }
 
 .action-btn.liked {

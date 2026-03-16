@@ -27,7 +27,7 @@
   width: 120px;
   height: 120px;
   border-radius: 50%;
-  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+  background: var(--secondary-color);
   color: white;
   display: flex;
   align-items: center;
@@ -79,7 +79,7 @@
   padding: 10px 16px;
   border: none;
   border-radius: var(--radius-lg);
-  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+  background: var(--accent-color);
   color: #fff;
   font-weight: 700;
   cursor: pointer;
@@ -145,7 +145,7 @@
 .new-outfit-btn {
   margin-left: auto;
   border: none;
-  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+  background: var(--accent-color);
   color: #fff;
   padding: 10px 16px;
   border-radius: var(--radius-md);
