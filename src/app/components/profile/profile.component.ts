@@ -2,8 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
+import { UserService } from '../../services/user.service';
 import { User } from '../../models/user.model';
 import { NavbarComponent } from '../navbar/navbar.component';
 
@@ -29,6 +30,7 @@ export class ProfileComponent implements OnInit {
   loadingOutfits = true;
   hasLoadedOutfits = false;
   activeTab: 'armario' | 'outfits' = 'armario';
+  isOwnProfile = false;
 
   showCreateOutfit = false;
   newOutfitName = '';
@@ -54,8 +56,10 @@ export class ProfileComponent implements OnInit {
 
   constructor(
     private authService: AuthService,
+    private userService: UserService,
     private http: HttpClient,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute
   ) {
     const current = this.authService.currentUserValue;
     if (current) {
@@ -64,8 +68,30 @@ export class ProfileComponent implements OnInit {
   }
 
   ngOnInit() {
-    if (this.user.id) {
-      this.loadPosts();
+    const id = this.route.snapshot.paramMap.get('id');
+    const currentUser = this.authService.currentUserValue;
+    if (id) {
+      const userId = +id;
+      this.isOwnProfile = currentUser?.id === userId;
+      this.userService.getUserById(userId).subscribe({
+        next: (res: any) => {
+          if (res.success) {
+            this.user = res.user;
+            this.loadPosts();
+          }
+        },
+        error: (err) => {
+          console.error('Error cargando perfil:', err);
+          this.router.navigate(['/home']);
+        }
+      });
+    } else {
+      // Perfil propio
+      this.isOwnProfile = true;
+      if (currentUser) {
+        this.user = currentUser;
+        this.loadPosts();
+      }
     }
   }
 

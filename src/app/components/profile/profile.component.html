@@ -30,23 +30,23 @@
         [class.active]="activeTab === 'armario'"
         (click)="setTab('armario')"
       >
-        Mi Armario
+        {{ isOwnProfile ? 'Mi Armario' : 'Armario' }}
       </button>
       <button
         class="tab-btn"
         [class.active]="activeTab === 'outfits'"
         (click)="setTab('outfits')"
       >
-        Mis Outfits
+        {{ isOwnProfile ? 'Mis Outfits' : 'Outfits' }}
       </button>
 
-      <button class="new-outfit-btn" *ngIf="activeTab === 'outfits'" (click)="openCreateOutfit()">
+      <button class="new-outfit-btn" *ngIf="activeTab === 'outfits' && isOwnProfile" (click)="openCreateOutfit()">
         ➕ Nuevo Outfit
       </button>
-      <button class="new-outfit-btn ai-btn" *ngIf="activeTab === 'outfits'" (click)="openGenerateOutfitIA()">
+      <button class="new-outfit-btn ai-btn" *ngIf="activeTab === 'outfits' && isOwnProfile" (click)="openGenerateOutfitIA()">
         🧠 Generar con IA
       </button>
-      <button class="new-outfit-btn" *ngIf="activeTab === 'armario'" (click)="toggleCreatePost()">
+      <button class="new-outfit-btn" *ngIf="activeTab === 'armario' && isOwnProfile" (click)="toggleCreatePost()">
         ➕ Nueva Publicación
       </button>
     </div>
