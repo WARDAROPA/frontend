@@ -91,7 +91,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
     const load$ = this.isFollowingFeed
       ? this.postService.getFollowingPosts(this.pageSize, offset)
-      : this.postService.getPosts(undefined, this.pageSize, offset);
+      : this.postService.getPosts(this.currentUser?.id, this.pageSize, offset);
 
     load$.subscribe({
       next: (response) => {
