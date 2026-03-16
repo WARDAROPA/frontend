@@ -238,16 +238,35 @@ export class ProfileComponent implements OnInit {
     });
   }
 
+  private compressImage(file: File, maxPx: number, quality: number): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const img = new Image();
+        img.onload = () => {
+          const scale = Math.min(1, maxPx / Math.max(img.width, img.height));
+          const canvas = document.createElement('canvas');
+          canvas.width = Math.round(img.width * scale);
+          canvas.height = Math.round(img.height * scale);
+          const ctx = canvas.getContext('2d')!;
+          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+          resolve(canvas.toDataURL('image/jpeg', quality));
+        };
+        img.onerror = reject;
+        img.src = e.target!.result as string;
+      };
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+  }
+
   onAvatarSelected(event: any) {
     const file = event.target.files[0];
     if (!file) return;
-    const reader = new FileReader();
-    reader.onload = () => {
-      const base64 = reader.result as string;
-      this.avatarPreview = base64;
-      this.uploadAvatar(base64);
-    };
-    reader.readAsDataURL(file);
+    this.compressImage(file, 400, 0.85).then(compressed => {
+      this.avatarPreview = compressed;
+      this.uploadAvatar(compressed);
+    });
   }
 
   uploadAvatar(base64: string) {
@@ -306,11 +325,9 @@ export class ProfileComponent implements OnInit {
     const file = event.target.files[0];
     if (file) {
       this.selectedFileName = file.name;
-      const reader = new FileReader();
-      reader.onload = () => {
-        this.newPostPhoto = reader.result as string;
-      };
-      reader.readAsDataURL(file);
+      this.compressImage(file, 1200, 0.8).then(compressed => {
+        this.newPostPhoto = compressed;
+      });
     }
   }
 
