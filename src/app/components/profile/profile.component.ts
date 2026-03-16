@@ -31,6 +31,8 @@ export class ProfileComponent implements OnInit {
   hasLoadedOutfits = false;
   activeTab: 'armario' | 'outfits' = 'armario';
   isOwnProfile = false;
+  isFollowing = false;
+  followLoading = false;
 
   showCreateOutfit = false;
   newOutfitName = '';
@@ -81,6 +83,9 @@ export class ProfileComponent implements OnInit {
             if (res.success) {
               this.user = res.user;
               this.loadPosts();
+              if (!this.isOwnProfile) {
+                this.loadFollowStatus(userId);
+              }
             }
           },
           error: (err) => {
@@ -167,6 +172,67 @@ export class ProfileComponent implements OnInit {
       alert('Sesion expirada. Inicia sesion nuevamente.');
       this.router.navigate(['/login']);
     }
+  }
+
+  private loadFollowStatus(userId: number): void {
+    this.followLoading = true;
+    this.userService.getFollowing().subscribe({
+      next: (res: any) => {
+        this.isFollowing = res.success && Array.isArray(res.users)
+          ? res.users.some((u: any) => u.id === userId)
+          : false;
+        this.followLoading = false;
+      },
+      error: (err) => {
+        console.error('Error al cargar estado de seguimiento:', err);
+        this.followLoading = false;
+        this.handleAuthError(err);
+      }
+    });
+  }
+
+  followUser(): void {
+    if (!this.user?.id) {
+      return;
+    }
+
+    this.followLoading = true;
+    this.userService.followUser(this.user.id).subscribe({
+      next: (res: any) => {
+        if (res.success) {
+          this.isFollowing = true;
+        }
+        this.followLoading = false;
+      },
+      error: (err) => {
+        console.error('Error al seguir usuario:', err);
+        this.followLoading = false;
+        this.handleAuthError(err);
+        alert('No se pudo seguir al usuario.');
+      }
+    });
+  }
+
+  unfollowUser(): void {
+    if (!this.user?.id) {
+      return;
+    }
+
+    this.followLoading = true;
+    this.userService.unfollowUser(this.user.id).subscribe({
+      next: (res: any) => {
+        if (res.success) {
+          this.isFollowing = false;
+        }
+        this.followLoading = false;
+      },
+      error: (err) => {
+        console.error('Error al dejar de seguir usuario:', err);
+        this.followLoading = false;
+        this.handleAuthError(err);
+        alert('No se pudo dejar de seguir al usuario.');
+      }
+    });
   }
 
   deletePost(postId: number) {

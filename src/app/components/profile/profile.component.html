@@ -15,7 +15,14 @@
       <div class="profile-stats">
         <span><strong>{{ posts.length }}</strong> prendas subidas</span>
       </div>
-
+      <button
+        class="follow-btn"
+        *ngIf="!isOwnProfile"
+        [disabled]="followLoading"
+        (click)="isFollowing ? unfollowUser() : followUser()"
+      >
+        {{ isFollowing ? 'Dejar de seguir' : 'Seguir' }}
+      </button>
       <p class="profile-bio" *ngIf="user.bio">{{ user.bio }}</p>
       <p class="profile-empty-bio" *ngIf="!user.bio">Sin biografía aún.</p>
     </div>
