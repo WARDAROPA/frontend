@@ -19,6 +19,14 @@ export class PostService {
     return this.http.get<{ success: boolean; posts: Post[]; hasMore: boolean }>(`${this.apiUrl}/posts`, params ? { params } : {});
   }
 
+  getFollowingPosts(limit: number = 12, offset: number = 0): Observable<{ success: boolean; posts: Post[]; hasMore: boolean }> {
+    const params = { limit: limit.toString(), offset: offset.toString() };
+    return this.http.get<{ success: boolean; posts: Post[]; hasMore: boolean }>(
+      `${this.apiUrl}/posts/following`,
+      { params }
+    );
+  }
+
   createPost(post: CreatePostRequest): Observable<{ success: boolean; message: string; postId: number }> {
     return this.http.post<{ success: boolean; message: string; postId: number }>(
       `${this.apiUrl}/posts`,

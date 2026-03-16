@@ -26,6 +26,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   likeLoadingByPost: Record<number, boolean> = {};
   private readonly pageSize = 12;
   private currentOffset = 0;
+  isFollowingFeed = false;
   
   showCreatePost = false;
   newPostDescription = '';
@@ -73,8 +74,13 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.wsService.disconnect();
   }
 
+  setFeedMode(following: boolean): void {
+    if (this.isFollowingFeed === following) return;
+    this.isFollowingFeed = following;
+    this.loadPosts(true);
+  }
+
   loadPosts(reset: boolean = false): void {
-    const userId = this.currentUser?.id;
     const offset = reset ? 0 : this.currentOffset;
 
     if (reset) {
@@ -83,7 +89,11 @@ export class HomeComponent implements OnInit, OnDestroy {
       this.loadingMorePosts = true;
     }
 
-    this.postService.getPosts(userId, this.pageSize, offset).subscribe({
+    const load$ = this.isFollowingFeed
+      ? this.postService.getFollowingPosts(this.pageSize, offset)
+      : this.postService.getPosts(undefined, this.pageSize, offset);
+
+    load$.subscribe({
       next: (response) => {
         if (response.success) {
           const newPosts = response.posts;

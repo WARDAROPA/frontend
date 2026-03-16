@@ -122,7 +122,25 @@
 
   <div class="feed">
     <div class="feed-header">
-      <h2>Feed de Moda</h2>
+      <div class="feed-title-group">
+        <h2>Feed de Moda</h2>
+        <div class="feed-toggle">
+          <button
+            class="toggle-btn"
+            [class.active]="!isFollowingFeed"
+            (click)="setFeedMode(false)"
+          >
+            Todos
+          </button>
+          <button
+            class="toggle-btn"
+            [class.active]="isFollowingFeed"
+            (click)="setFeedMode(true)"
+          >
+            Seguidos
+          </button>
+        </div>
+      </div>
       <button class="header-new-post-btn" (click)="toggleCreatePost()" *ngIf="!showCreatePost">
         ➕ Nueva Publicación
       </button>

@@ -226,6 +226,38 @@
   margin-bottom: 32px;
 }
 
+.feed-title-group {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.feed-toggle {
+  display: flex;
+  gap: 8px;
+}
+
+.toggle-btn {
+  border: 1px solid var(--border-color);
+  background: var(--bg-secondary);
+  color: var(--text-secondary);
+  padding: 8px 14px;
+  border-radius: var(--radius-lg);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.toggle-btn.active {
+  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+  color: #fff;
+  border-color: transparent;
+}
+
+.toggle-btn:hover:not(.active) {
+  background: var(--bg-tertiary);
+}
+
 .feed-header h2 {
   font-size: 28px;
   font-weight: 700;
