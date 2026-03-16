@@ -4,23 +4,22 @@
   align-items: center;
   justify-content: center;
   padding: 24px;
-  background: var(--bg-primary);
+  background: #1a202c;
 }
 
 .auth-card {
-  background: var(--bg-primary);
+  background: #2d3748;
   border-radius: var(--radius-2xl);
   box-shadow: var(--shadow-xl);
   width: 100%;
   max-width: 440px;
   padding: 48px;
-  animation: slideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-@keyframes slideUp {
+@keyframes none {
   from {
-    opacity: 0;
-    transform: translateY(20px);
+    opacity: 1;
+    transform: translateY(0);
   }
   to {
     opacity: 1;

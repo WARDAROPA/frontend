@@ -50,7 +50,6 @@
 }
 
 .post-card:hover {
-  transform: translateY(-4px);
   box-shadow: var(--shadow-xl);
   border-color: transparent;
 }
@@ -279,7 +278,6 @@
 }
 
 .header-new-post-btn:hover {
-  transform: translateY(-2px);
   box-shadow: var(--shadow-lg);
 }
 
@@ -337,12 +335,6 @@
   align-items: center;
   justify-content: center;
   z-index: 2000;
-  animation: fadeIn 0.3s;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
 }
 
 .modal-content {
@@ -353,13 +345,7 @@
   max-height: 85vh;
   overflow: hidden;
   box-shadow: var(--shadow-xl);
-  animation: slideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   border: 1px solid var(--border-color);
-}
-
-@keyframes slideUp {
-  from { transform: translateY(30px); opacity: 0; }
-  to { transform: translateY(0); opacity: 1; }
 }
 
 .modal-header {
@@ -536,7 +522,6 @@
   align-items: center;
   justify-content: center;
   z-index: 2000;
-  animation: fadeIn 0.3s;
 }
 
 .comments-list {
