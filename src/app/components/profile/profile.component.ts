@@ -238,6 +238,42 @@ export class ProfileComponent implements OnInit {
     });
   }
 
+  onAvatarSelected(event: any) {
+    const file = event.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      const base64 = reader.result as string;
+      this.avatarPreview = base64;
+      this.uploadAvatar(base64);
+    };
+    reader.readAsDataURL(file);
+  }
+
+  uploadAvatar(base64: string) {
+    this.avatarUploading = true;
+    this.http.put(`${this.apiUrl}/users/me`, { avatar: base64 }).subscribe({
+      next: (res: any) => {
+        if (res.success) {
+          this.user.avatar = base64;
+          this.avatarPreview = '';
+          const current = this.authService.currentUserValue;
+          if (current) {
+            this.authService.updateCurrentUser({ ...current, avatar: base64 });
+          }
+        }
+        this.avatarUploading = false;
+      },
+      error: (err) => {
+        console.error('Error subiendo avatar:', err);
+        this.handleAuthError(err);
+        this.avatarPreview = '';
+        this.avatarUploading = false;
+        alert('No se pudo actualizar la foto de perfil.');
+      }
+    });
+  }
+
   deletePost(postId: number) {
     if (confirm('¿Estás seguro de que quieres eliminar esta prenda de tu armario?')) {
       this.http.delete(`${this.apiUrl}/posts/${postId}`).subscribe({

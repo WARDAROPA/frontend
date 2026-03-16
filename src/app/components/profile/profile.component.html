@@ -3,10 +3,15 @@
 <div class="profile-container">
   
   <header class="profile-header">
-    <div class="profile-avatar">
-      <span *ngIf="!user.avatar">{{ user.username.charAt(0) | uppercase }}</span>
-      <img *ngIf="user.avatar" [src]="user.avatar" alt="Avatar" />
-    </div>
+    <label class="profile-avatar" [class.editable]="isOwnProfile" [title]="isOwnProfile ? 'Cambiar foto de perfil' : ''">
+      <span *ngIf="!user.avatar && !avatarPreview">{{ user.username.charAt(0) | uppercase }}</span>
+      <img *ngIf="user.avatar || avatarPreview" [src]="avatarPreview || user.avatar" alt="Avatar" />
+      <div class="avatar-overlay" *ngIf="isOwnProfile">
+        <span *ngIf="!avatarUploading">📷</span>
+        <span *ngIf="avatarUploading" class="avatar-spinner"></span>
+      </div>
+      <input *ngIf="isOwnProfile" type="file" accept="image/*" style="display:none" (change)="onAvatarSelected($event)">
+    </label>
     
     <div class="profile-info">
       <h2 class="username">{{ user.username }}</h2>

@@ -6,6 +6,7 @@ export interface Post {
   created_at: string;
   usuario_id: number;
   username: string;
+  user_avatar?: string;
   likes_count: number;
   comments_count: number;
   user_liked: number;
