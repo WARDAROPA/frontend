@@ -156,7 +156,9 @@ export class HomeComponent implements OnInit, OnDestroy {
         error: (error) => {
           post.user_liked = 1;
           post.likes_count = Number(post.likes_count || 0) + 1;
-          console.error('Error al quitar like:', error);
+          if (error.status !== 400) {
+            console.error('Error al quitar like:', error);
+          }
         },
         complete: () => {
           this.likeLoadingByPost[post.id] = false;
@@ -173,7 +175,9 @@ export class HomeComponent implements OnInit, OnDestroy {
         error: (error) => {
           post.user_liked = 0;
           post.likes_count = Math.max(0, Number(post.likes_count || 0) - 1);
-          console.error('Error al dar like:', error);
+          if (error.status !== 400) {
+            console.error('Error al dar like:', error);
+          }
         },
         complete: () => {
           this.likeLoadingByPost[post.id] = false;
